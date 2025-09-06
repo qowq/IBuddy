@@ -106,6 +106,19 @@ function setupEventListeners() {
   chatInput.addEventListener('input', autoResizeTextarea);
   chatInput.addEventListener('keydown', handleEnterKey);
   
+  // Fix for the 'sticky' UI on mobile after keyboard closes.
+  chatInput.addEventListener('blur', () => {
+    // This issue primarily affects mobile devices where the virtual keyboard
+    // alters the viewport. We check for a mobile-sized screen.
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      // A brief timeout allows the browser to finish the keyboard's closing
+      // animation before we force the scroll, preventing a visual jump.
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 50);
+    }
+  });
+  
   // Disclaimer Modal Listeners
   showDisclaimerBtn.addEventListener('click', () => disclaimerModal.classList.remove('hidden'));
   closeDisclaimerBtn.addEventListener('click', () => disclaimerModal.classList.add('hidden'));
@@ -320,14 +333,9 @@ async function sendMessage(message: string) {
     setFormState(true);
     scrollToBottom();
 
-    // Fix for mobile keyboard layout issues
-    // Blurring the input helps dismiss the keyboard, and scrolling to top resets the viewport
-    // in case it got stuck after the keyboard disappeared.
+    // Blurring the input dismisses the keyboard. The 'blur' event listener
+    // will handle the viewport correction for mobile layout issues.
     chatInput.blur();
-    // A small delay can help ensure the keyboard has finished its closing animation
-    setTimeout(() => {
-        window.scrollTo(0, 0);
-    }, 100);
   }
 }
 
