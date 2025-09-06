@@ -137,7 +137,10 @@ body {
     filter: blur(80px);
     border-radius: 50%;
     z-index: 1;
-    transition: background 0.3s ease;
+}
+
+body.dark-mode .gradient-orb {
+    display: none;
 }
 
 #welcome-screen h1 {
@@ -584,26 +587,20 @@ body.dark-mode .theme-toggle-label .moon {
 
 /* --- Responsive Design --- */
 @media (max-width: 768px) {
-    html, body {
-        /* Lock the viewport, prevent rubber-banding */
-        height: 100%;
-        overflow: hidden;
-    }
     body {
+        height: 100dvh; /* Use dynamic viewport height for full-screen layout */
+        overflow: hidden; /* Prevent the body itself from scrolling */
         padding-top: 0;
     }
+
     #app-container {
         padding: 0;
-        /* Make the app container a fixed, full-screen element */
-        position: fixed;
-        top: 0;
-        left: 0;
         width: 100%;
-        height: 100dvh; /* Use dynamic viewport height to account for browser UI */
+        height: 100%; /* Fill the new viewport-sized body */
     }
 
     #chat-container {
-        height: 100%; /* Fill the fixed app container */
+        height: 100%; /* Fill the app container */
         width: 100%;
         max-width: 100%;
         border-radius: 0;
