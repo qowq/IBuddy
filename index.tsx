@@ -4,9 +4,8 @@
  */
 
 // --- Configuration ---
-// FIX: Renamed API_KEY to apiKey to avoid a potential global scope conflict causing a "Cannot redeclare" error.
-const apiKey = process.env.API_KEY;
-const WEBHOOK_URL = 'https://hamzeh1128.app.n8n.cloud/webhook/IBuddy';
+// The API Key and Webhook URL are now handled by the serverless function for security.
+const API_ENDPOINT = '/api/chat';
 
 // System instruction for the chatbot
 const SYSTEM_INSTRUCTION = {
@@ -42,7 +41,6 @@ interface ChatMessage {
   parts: ChatPart[];
 }
 
-// FIX: Renamed `history` to `chatHistory` to avoid conflict with the browser's `window.history` object. This resolves both the "Cannot redeclare" error and the subsequent errors about 'push' not existing on type 'History'.
 let chatHistory: ChatMessage[] = [SYSTEM_INSTRUCTION as ChatMessage];
 let isLoading = false;
 let isChatStarted = false;
@@ -88,15 +86,11 @@ const TIPS = [
  * Initializes the application, sets up event listeners, and starts the chat.
  */
 function main() {
-  if (!apiKey) {
-    showWelcomeError("API_KEY is not configured.");
-    return;
-  }
-  
   setupEventListeners();
   applyInitialTheme();
   setWelcomeGreeting();
   displayDailyTip();
+  // The check for API_KEY is now done on the server.
 }
 
 /**
@@ -126,7 +120,6 @@ function setupEventListeners() {
  */
 function displayDailyTip() {
     const dayOfMonth = new Date().getDate();
-    // Use modulo to cycle through tips if there are more days in the month than tips
     const tipIndex = (dayOfMonth - 1) % TIPS.length;
     const tip = TIPS[tipIndex];
     dailyTipCard.innerHTML = `💡 <strong>Daily Tip:</strong> ${tip}`;
@@ -198,13 +191,11 @@ async function sendMessage(message: string) {
   const loadingSpinner = showLoadingIndicator(aiMessageElement);
   
   try {
-    const res = await fetch(WEBHOOK_URL, {
+    const res = await fetch(API_ENDPOINT, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
         },
-        // FIX: Send history *before* the current message to avoid redundant data.
         body: JSON.stringify({ 
             history: chatHistory,
             body: {
@@ -213,17 +204,22 @@ async function sendMessage(message: string) {
         })
     });
 
-    if (!res.ok) {
-        throw new Error(`Webhook request failed with status ${res.status}`);
-    }
-    
     const responseText = await res.text();
+
+    if (!res.ok) {
+      // Try to parse error from serverless function
+      try {
+        const errorJson = JSON.parse(responseText);
+        throw new Error(errorJson.error || `Request failed with status ${res.status}`);
+      } catch {
+        throw new Error(responseText || `Request failed with status ${res.status}`);
+      }
+    }
     
     if (!responseText) {
-         throw new Error('Received an empty response from the webhook.');
+         throw new Error('Received an empty response from the server.');
     }
 
-    // FIX: Update history only after a successful response is received.
     chatHistory.push({ role: 'user', parts: [{ text: message }] });
     chatHistory.push({ role: 'model', parts: [{ text: responseText }] });
     
@@ -234,13 +230,11 @@ async function sendMessage(message: string) {
     if (contentWrapper) {
         contentWrapper.innerHTML = simpleMarkdownToHtml(responseText);
 
-        // --- Add Feedback Buttons ---
         const messageAndFeedbackContainer = aiMessageElement.querySelector('.message-and-feedback');
         if (messageAndFeedbackContainer) {
             const feedbackActions = document.createElement('div');
             feedbackActions.className = 'feedback-actions';
 
-            // --- Create Action Button with Tooltip ---
             const createActionButton = (label: string, tooltipText: string, svg: string) => {
                 const actionItem = document.createElement('div');
                 actionItem.className = 'action-item';
@@ -260,7 +254,6 @@ async function sendMessage(message: string) {
                 return { actionItem, button };
             };
 
-            // --- Copy Button ---
             const { actionItem: copyAction, button: copyBtn } = createActionButton(
                 'Copy', 
                 'Copy', 
@@ -277,14 +270,12 @@ async function sendMessage(message: string) {
                 }
             });
 
-            // --- Thumbs Up Button ---
             const { actionItem: thumbUpAction, button: thumbUpBtn } = createActionButton(
                 'Good response',
                 'Good response',
                 `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>`
             );
             
-            // --- Thumbs Down Button ---
             const { actionItem: thumbDownAction, button: thumbDownBtn } = createActionButton(
                 'Bad response',
                 'Bad response',
@@ -339,11 +330,10 @@ async function sendFeedback(type: 'thumbs_up' | 'thumbs_down') {
         ? { thumbsup: true } 
         : { thumbsdown: true };
     try {
-        const res = await fetch(WEBHOOK_URL, {
+        const res = await fetch(API_ENDPOINT, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
             },
             body: JSON.stringify(payload)
         });
@@ -401,7 +391,6 @@ function appendMessage(role: 'user' | 'model', text: string): HTMLDivElement {
 function showLoadingIndicator(parentElement: HTMLElement): HTMLDivElement {
     const spinner = document.createElement('div');
     spinner.classList.add('spinner');
-    // For model messages, the spinner should go inside the content wrapper
     const contentWrapper = parentElement.querySelector('.message-content');
     if (contentWrapper) {
         contentWrapper.appendChild(spinner);
@@ -419,7 +408,7 @@ function showLoadingIndicator(parentElement: HTMLElement): HTMLDivElement {
  */
 function showWelcomeError(message: string) {
     const suggestionsContainer = document.querySelector('.suggestion-chips')!;
-    suggestionsContainer.innerHTML = ''; // Clear existing suggestions
+    suggestionsContainer.innerHTML = ''; 
 
     const errorElement = document.createElement('div');
     errorElement.className = 'error-message';
@@ -427,16 +416,12 @@ function showWelcomeError(message: string) {
     
     const dailyTip = document.getElementById('daily-tip-card');
     if (dailyTip) {
-        // Place the error message right before the daily tip card for visibility
         dailyTip.insertAdjacentElement('beforebegin', errorElement);
-        // Add some margin to the error message for spacing
         errorElement.style.marginBottom = '1rem';
     } else {
-        // Fallback if the tip card isn't found
         welcomeScreen.appendChild(errorElement);
     }
     
-    // Disable the form since the chat cannot function
     setFormState(false);
 }
 
@@ -501,17 +486,15 @@ function handleEnterKey(e: KeyboardEvent) {
  * @returns {string} The HTML string.
  */
 function simpleMarkdownToHtml(text: string): string {
-    // 1. Sanitize to prevent XSS
     const sanitizedText = text
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
 
-    // 2. Apply simple formatting
     return sanitizedText
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
-        .replace(/\*(.*?)\*/g, '<em>$1</em>')       // Italic
-        .replace(/\n/g, '<br>'); // Convert newlines to <br> tags
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') 
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')       
+        .replace(/\n/g, '<br>'); 
 }
 
 
