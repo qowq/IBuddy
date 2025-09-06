@@ -5,6 +5,7 @@
 
 // --- Configuration ---
 const CHAT_API_ENDPOINT = '/api/chat';
+const FEEDBACK_API_ENDPOINT = '/api/feedback';
 
 
 // System instruction for the chatbot
@@ -325,10 +326,33 @@ async function sendMessage(message: string) {
  * Sends feedback to the backend.
  * @param {'thumbs_up' | 'thumbs_down'} type The type of feedback.
  */
-function sendFeedback(type: 'thumbs_up' | 'thumbs_down') {
-    // This functionality is reverted as requested. It now only logs to the console.
-    console.log(`Feedback received: ${type}`);
+async function sendFeedback(type: 'thumbs_up' | 'thumbs_down') {
+    try {
+        // Construct a simple payload based on the feedback type.
+        // The message content is NOT included.
+        const payload = type === 'thumbs_up' 
+            ? { thumbsup: true } 
+            : { thumbsdown: true };
+
+        const res = await fetch(FEEDBACK_API_ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+            // Log the error but don't bother the user with it.
+            console.error('Failed to send feedback:', await res.text());
+        } else {
+            console.log(`Feedback '${type}' sent successfully.`);
+        }
+    } catch (error) {
+        console.error('Error sending feedback:', error);
+    }
 }
+
 
 /**
  * Appends a message to the chat window.
