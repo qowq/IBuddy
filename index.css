@@ -585,13 +585,17 @@ body.dark-mode .theme-toggle-label .moon {
 @media (max-width: 768px) {
     body {
         padding-top: 0;
+        /* Fix mobile scrolling issue */
+        height: 100dvh;
+        overflow-y: hidden;
     }
     #app-container {
         padding: 0;
+        height: 100%; /* Fill new body height */
     }
 
     #chat-container {
-        height: 100vh;
+        height: 100%; /* Fill app container */
         width: 100%;
         max-width: 100%;
         border-radius: 0;
