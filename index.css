@@ -24,7 +24,7 @@
     --tooltip-text-color: #ffffff;
 }
 
-body.dark-mode {
+html.dark-mode {
     /* Dark Theme (ChatGPT-inspired) */
     --bg-color: #171717; /* Dark gray background */
     --chat-container-bg: #000000; /* Black chat container */
@@ -58,14 +58,14 @@ body.dark-mode {
 html {
     scroll-behavior: smooth;
     height: 100%;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body {
     font-family: var(--font-family);
-    background-color: var(--bg-color);
-    color: var(--text-color);
     line-height: 1.6;
-    transition: background-color 0.3s ease, color 0.3s ease;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -140,7 +140,7 @@ body {
     z-index: 1;
 }
 
-body.dark-mode .gradient-orb {
+html.dark-mode .gradient-orb {
     display: none;
 }
 
@@ -330,7 +330,7 @@ body.dark-mode .gradient-orb {
     outline: none;
 }
 
-body.dark-mode #chat-input::placeholder {
+html.dark-mode #chat-input::placeholder {
     color: var(--text-color-light);
 }
 
@@ -570,18 +570,18 @@ body.dark-mode #chat-input::placeholder {
     position: absolute;
 }
 
-body:not(.dark-mode) .theme-toggle-label .sun {
+html:not(.dark-mode) .theme-toggle-label .sun {
     opacity: 1;
 }
-body:not(.dark-mode) .theme-toggle-label .moon {
+html:not(.dark-mode) .theme-toggle-label .moon {
     opacity: 0;
 }
 
-body.dark-mode .theme-toggle-label .sun {
+html.dark-mode .theme-toggle-label .sun {
     opacity: 0;
 }
 
-body.dark-mode .theme-toggle-label .moon {
+html.dark-mode .theme-toggle-label .moon {
     opacity: 1;
 }
 

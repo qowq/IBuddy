@@ -470,8 +470,8 @@ function scrollToBottom() {
  * Toggles the theme between light and dark mode.
  */
 function handleThemeToggle() {
-    document.body.classList.toggle('dark-mode');
-    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    document.documentElement.classList.toggle('dark-mode');
+    localStorage.setItem('theme', document.documentElement.classList.contains('dark-mode') ? 'dark' : 'light');
 }
 
 /**
@@ -480,7 +480,7 @@ function handleThemeToggle() {
 function applyInitialTheme() {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
+        document.documentElement.classList.add('dark-mode');
         themeToggle.checked = true;
     }
 }
