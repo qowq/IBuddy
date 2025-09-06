@@ -57,6 +57,7 @@ body.dark-mode {
 
 html {
     scroll-behavior: smooth;
+    height: 100%;
 }
 
 body {
@@ -68,7 +69,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    min-height: 100vh;
+    min-height: 100%;
     padding-top: 5vh;
 }
 
@@ -588,7 +589,7 @@ body.dark-mode .theme-toggle-label .moon {
 /* --- Responsive Design --- */
 @media (max-width: 768px) {
     body {
-        height: 100dvh; /* Use dynamic viewport height for full-screen layout */
+        height: 100%; /* Use percentage height for stability */
         overflow: hidden; /* Prevent the body itself from scrolling */
         padding-top: 0;
     }

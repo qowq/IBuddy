@@ -319,6 +319,15 @@ async function sendMessage(message: string) {
     isLoading = false;
     setFormState(true);
     scrollToBottom();
+
+    // Fix for mobile keyboard layout issues
+    // Blurring the input helps dismiss the keyboard, and scrolling to top resets the viewport
+    // in case it got stuck after the keyboard disappeared.
+    chatInput.blur();
+    // A small delay can help ensure the keyboard has finished its closing animation
+    setTimeout(() => {
+        window.scrollTo(0, 0);
+    }, 100);
   }
 }
 
