@@ -4,8 +4,8 @@
  */
 
 // --- Configuration ---
-// The API Key and Webhook URL are now handled by the serverless function for security.
-const API_ENDPOINT = '/api/chat';
+const CHAT_API_ENDPOINT = '/api/chat';
+
 
 // System instruction for the chatbot
 const SYSTEM_INSTRUCTION = {
@@ -191,7 +191,7 @@ async function sendMessage(message: string) {
   const loadingSpinner = showLoadingIndicator(aiMessageElement);
   
   try {
-    const res = await fetch(API_ENDPOINT, {
+    const res = await fetch(CHAT_API_ENDPOINT, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -325,25 +325,9 @@ async function sendMessage(message: string) {
  * Sends feedback to the backend.
  * @param {'thumbs_up' | 'thumbs_down'} type The type of feedback.
  */
-async function sendFeedback(type: 'thumbs_up' | 'thumbs_down') {
-    const payload = type === 'thumbs_up' 
-        ? { thumbsup: true } 
-        : { thumbsdown: true };
-    try {
-        const res = await fetch(API_ENDPOINT, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        });
-
-        if (!res.ok) {
-            console.error(`Feedback submission failed with status ${res.status}`);
-        }
-    } catch (error) {
-        console.error("Error sending feedback:", error);
-    }
+function sendFeedback(type: 'thumbs_up' | 'thumbs_down') {
+    // This functionality is reverted as requested. It now only logs to the console.
+    console.log(`Feedback received: ${type}`);
 }
 
 /**
