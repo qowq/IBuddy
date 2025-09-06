@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBuddy Support Chat</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="importmap">
+        {
+          "imports": {
+            "@google/genai": "https://esm.sh/@google/genai@^0.12.0"
+          }
+        }
+    </script>
+    <script type="module" src="index.tsx"></script>
+</head>
+<body>
+    <div id="app-container">
+        <main id="chat-container">
+            <div class="chat-header">
+                <div class="logo">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 7L12 12M22 7L12 12M12 22V12M17 4.5L7 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>IBuddy</span>
+                </div>
+                <div class="theme-switcher">
+                    <label for="theme-toggle" class="theme-toggle-label">
+                        <input type="checkbox" id="theme-toggle" aria-label="Toggle theme">
+                        <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.106a.75.75 0 010 1.06l-1.591 1.59a.75.75 0 11-1.06-1.06l1.59-1.59a.75.75 0 011.06 0zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5h2.25a.75.75 0 01.75.75zM17.803 17.803a.75.75 0 01-1.06 0l-1.59-1.591a.75.75 0 111.06-1.06l1.59 1.59a.75.75 0 010 1.06zM12 21.75a.75.75 0 01-.75-.75v-2.25a.75.75 0 011.5 0v2.25a.75.75 0 01-.75-.75zM5.197 17.803a.75.75 0 010-1.06l1.59-1.591a.75.75 0 111.06 1.06l-1.59 1.59a.75.75 0 01-1.06 0zM3 12a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H3.75A.75.75 0 013 12zM6.106 5.106a.75.75 0 011.06 0l1.591 1.59a.75.75 0 01-1.06 1.06l-1.59-1.59a.75.75 0 010-1.06z"></path></svg>
+                        <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 004.463-.949a.75.75 0 01.819.162l.805.806a.75.75 0 01-.162.819A10.5 10.5 0 0118 19.5a10.5 10.5 0 01-10.5-10.5c0-1.31.25-2.565.718-3.722l.806.805z" clip-rule="evenodd"></path></svg>
+                    </label>
+                </div>
+            </div>
+
+            <div id="welcome-screen">
+                <div class="gradient-orb"></div>
+                <h1 id="welcome-greeting">Good evening!</h1>
+                <h2>How can I help you today?</h2>
+                <div id="daily-tip-card"></div>
+            </div>
+
+            <div id="chat-messages" class="hidden">
+                <!-- Messages will be dynamically inserted here -->
+            </div>
+
+            <div class="suggestion-chips">
+                <button data-prompt="Give me a study tip for memorization">🧠 Study Tips</button>
+                <button data-prompt="Help me plan my study week">🗓️ Time Management</button>
+                <button data-prompt="How can I deal with exam stress?">🧘 Stress Relief</button>
+                <button data-prompt="Suggest a fun and easy CAS activity">✨ CAS Ideas</button>
+            </div>
+            
+            <form id="chat-form">
+                <div class="input-wrapper">
+                    <label for="chat-input" class="visually-hidden">Your message</label>
+                    <textarea id="chat-input" placeholder="Message IBuddy..." rows="1" maxlength="2000" required></textarea>
+                    <button type="submit" aria-label="Send message">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                        </svg>
+                    </button>
+                </div>
+                 <p class="input-hint">IBuddy can make mistakes. <button type="button" id="show-disclaimer-btn">Check important info.</button></p>
+            </form>
+        </main>
+    </div>
+
+    <!-- Disclaimer Modal -->
+    <div id="disclaimer-modal" class="hidden">
+        <div class="modal-content">
+            <button id="close-disclaimer-btn" class="close-btn" aria-label="Close disclaimer">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                    <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clip-rule="evenodd" />
+                  </svg>                  
+            </button>
+            <h3>Disclaimer & Privacy Policy</h3>
+            <ul>
+                <li><strong>AI Limitations:</strong> IBuddy is an experimental AI peer mentor. Responses are for guidance only and may not always be accurate, complete, or tailored to your situation. Always verify critical information with official IB sources, teachers, or other trusted authorities.</li>
+                <li><strong>Not a Therapist:</strong> IBuddy is not a substitute for professional medical, mental health, or legal advice. If you are in crisis or experiencing severe anxiety, depression, or self-harm thoughts, contact a school counselor, a trusted adult, or a licensed professional immediately.</li>
+                <li><strong>Data & Privacy:</strong> To improve IBuddy, we collect anonymous interaction data. This includes the total number of messages and the count of 'good'/'bad' feedback clicks. No message content is ever logged or stored. Conversations are processed only to provide a response and are not retained. Please do not share sensitive personal information (full names, addresses, passwords, etc.).</li>
+                <li><strong>Use at Your Own Risk:</strong> Your use of IBuddy is at your own discretion. The creators are not liable for any issues, consequences, or misunderstandings resulting from your conversations.</li>
+                <li><strong>Safe Use Reminder:</strong> IBuddy is designed to provide general IB guidance only. It should not be used for academic cheating, unsafe activities, or risky decisions.</li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>
