@@ -30,6 +30,10 @@ const dailyTipCard = document.getElementById('daily-tip-card')!;
 const showDisclaimerBtn = document.getElementById('show-disclaimer-btn')!;
 const disclaimerModal = document.getElementById('disclaimer-modal')!;
 const closeDisclaimerBtn = document.getElementById('close-disclaimer-btn')!;
+const feedbackModal = document.getElementById('feedback-modal')!;
+const feedbackReason = document.getElementById('feedback-reason') as HTMLTextAreaElement;
+const submitFeedbackBtn = document.getElementById('submit-feedback-btn') as HTMLButtonElement;
+const cancelFeedbackBtn = document.getElementById('cancel-feedback-btn')!;
 
 
 // --- State Management ---
@@ -304,10 +308,12 @@ async function sendMessage(message: string) {
             });
 
             thumbDownBtn.addEventListener('click', () => {
-                sendFeedback('thumbs_down');
-                thumbDownBtn.classList.add('selected-down');
-                thumbUpBtn.disabled = true;
-                thumbDownBtn.disabled = true;
+                showFeedbackModal(() => {
+                    // This callback runs after feedback is successfully submitted.
+                    thumbDownBtn.classList.add('selected-down');
+                    thumbUpBtn.disabled = true;
+                    thumbDownBtn.disabled = true;
+                });
             });
             
             feedbackActions.appendChild(copyAction);
@@ -340,16 +346,65 @@ async function sendMessage(message: string) {
 }
 
 /**
+ * Shows the feedback modal and handles its interactions.
+ * @param {() => void} onSuccess - Callback function to execute after successfully submitting feedback.
+ */
+function showFeedbackModal(onSuccess: () => void) {
+    feedbackModal.classList.remove('hidden');
+    feedbackReason.value = ''; // Clear previous input
+    submitFeedbackBtn.disabled = true;
+    feedbackReason.focus();
+
+    const handleReasonInput = () => {
+        submitFeedbackBtn.disabled = feedbackReason.value.trim().length === 0;
+    };
+    
+    const cleanup = () => {
+        feedbackModal.classList.add('hidden');
+        // Remove event listeners to prevent memory leaks
+        feedbackModal.removeEventListener('click', handleOverlayClick);
+        feedbackReason.removeEventListener('input', handleReasonInput);
+        submitFeedbackBtn.removeEventListener('click', handleSubmit);
+        cancelFeedbackBtn.removeEventListener('click', handleCancel);
+    };
+
+    const handleOverlayClick = (e: MouseEvent) => {
+        if (e.target === feedbackModal) {
+            cleanup();
+        }
+    };
+    
+    const handleSubmit = async () => {
+        const reason = feedbackReason.value.trim();
+        if (reason) {
+            await sendFeedback('thumbs_down', reason);
+            onSuccess();
+            cleanup();
+        }
+    };
+
+    const handleCancel = () => {
+        cleanup();
+    };
+
+    // Attach event listeners
+    feedbackModal.addEventListener('click', handleOverlayClick);
+    feedbackReason.addEventListener('input', handleReasonInput);
+    submitFeedbackBtn.addEventListener('click', handleSubmit);
+    cancelFeedbackBtn.addEventListener('click', handleCancel);
+}
+
+
+/**
  * Sends feedback to the backend.
  * @param {'thumbs_up' | 'thumbs_down'} type The type of feedback.
+ * @param {string} [reason] Optional reason for negative feedback.
  */
-async function sendFeedback(type: 'thumbs_up' | 'thumbs_down') {
+async function sendFeedback(type: 'thumbs_up' | 'thumbs_down', reason?: string) {
     try {
-        // Construct a simple payload based on the feedback type.
-        // The message content is NOT included.
         const payload = type === 'thumbs_up' 
             ? { thumbsup: true } 
-            : { thumbsdown: true };
+            : { thumbsdown: true, ...(reason && { reason }) };
 
         const res = await fetch(FEEDBACK_API_ENDPOINT, {
             method: 'POST',

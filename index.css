@@ -512,6 +512,114 @@ html.dark-mode #chat-input::placeholder {
     color: var(--text-color);
 }
 
+/* --- Feedback Modal --- */
+#feedback-modal {
+    position: fixed;
+    z-index: 1001; /* Higher than disclaimer */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+#feedback-modal .modal-content {
+    background-color: var(--chat-container-bg);
+    color: var(--text-color);
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+#feedback-modal h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+#feedback-modal p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-color-light);
+}
+
+#feedback-reason {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+    min-height: 80px;
+    margin-top: 0.5rem;
+}
+
+#feedback-reason:focus {
+    outline: none;
+    border-color: var(--input-focus-border);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.modal-actions button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.modal-actions button:active {
+    transform: scale(0.98);
+}
+
+.modal-actions .primary-btn {
+    background-color: var(--button-bg);
+    color: var(--button-text-color);
+}
+.modal-actions .primary-btn:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+}
+
+html.dark-mode .modal-actions .primary-btn:disabled {
+    background-color: #404040;
+    color: #a0a0a0;
+}
+
+.modal-actions .secondary-btn {
+    background-color: var(--suggestion-bg);
+    color: var(--text-color);
+    border: 1px solid var(--suggestion-border);
+}
+
+.modal-actions .secondary-btn:hover {
+     background-color: var(--suggestion-hover-bg);
+}
+
 
 /* --- Loading Spinner --- */
 .spinner {
