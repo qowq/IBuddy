@@ -631,16 +631,14 @@ html.dark-mode .modal-actions .primary-btn:disabled {
 }
 
 .modal-actions .primary-btn.loading {
-    position: relative;
     pointer-events: none;
     color: transparent; /* Hide original text */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .modal-actions .primary-btn.loading .spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     width: 1rem; /* 16px */
     height: 1rem;
     border: 2px solid color-mix(in srgb, var(--button-text-color) 30%, transparent);
@@ -673,7 +671,7 @@ html.dark-mode .modal-actions .primary-btn:disabled {
 
 @keyframes spin {
     to {
-        rotate: 360deg;
+        transform: rotate(360deg);
     }
 }
 
