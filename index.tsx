@@ -4,8 +4,8 @@
  */
 
 // --- Configuration ---
-const CHAT_API_ENDPOINT = '/api/chat';
-const FEEDBACK_API_ENDPOINT = '/api/feedback';
+const CHAT_API_ENDPOINT = '/.netlify/functions/chat';
+const FEEDBACK_API_ENDPOINT = '/.netlify/functions/feedback';
 
 
 // System instruction for the chatbot
