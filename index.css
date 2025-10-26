@@ -673,7 +673,7 @@ html.dark-mode .modal-actions .primary-btn:disabled {
 
 @keyframes spin {
     to {
-        transform: rotate(360deg);
+        rotate: 360deg;
     }
 }
 
