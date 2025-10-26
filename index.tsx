@@ -33,7 +33,9 @@ const closeDisclaimerBtn = document.getElementById('close-disclaimer-btn')!;
 const feedbackModal = document.getElementById('feedback-modal')!;
 const feedbackReason = document.getElementById('feedback-reason') as HTMLTextAreaElement;
 const submitFeedbackBtn = document.getElementById('submit-feedback-btn') as HTMLButtonElement;
-const cancelFeedbackBtn = document.getElementById('cancel-feedback-btn')!;
+// Fix: Cast `cancelFeedbackBtn` to `HTMLButtonElement` to resolve errors where the `disabled` property was accessed on a generic `HTMLElement`.
+const cancelFeedbackBtn = document.getElementById('cancel-feedback-btn') as HTMLButtonElement;
+const feedbackCharCount = document.getElementById('feedback-char-count')!;
 
 
 // --- State Management ---
@@ -351,17 +353,37 @@ async function sendMessage(message: string) {
  */
 function showFeedbackModal(onSuccess: () => void) {
     feedbackModal.classList.remove('hidden');
-    feedbackReason.value = ''; // Clear previous input
+    feedbackReason.value = '';
     submitFeedbackBtn.disabled = true;
     feedbackReason.focus();
 
+    const maxLength = parseInt(feedbackReason.getAttribute('maxlength') || '200', 10);
+    feedbackCharCount.textContent = `0 / ${maxLength}`;
+    feedbackCharCount.classList.remove('error');
+
+    let isSubmitting = false;
+    const originalSubmitText = submitFeedbackBtn.textContent;
+
     const handleReasonInput = () => {
+        const currentLength = feedbackReason.value.length;
+        feedbackCharCount.textContent = `${currentLength} / ${maxLength}`;
         submitFeedbackBtn.disabled = feedbackReason.value.trim().length === 0;
+
+        if (currentLength > maxLength) {
+            feedbackCharCount.classList.add('error');
+        } else {
+            feedbackCharCount.classList.remove('error');
+        }
     };
     
     const cleanup = () => {
         feedbackModal.classList.add('hidden');
-        // Remove event listeners to prevent memory leaks
+        submitFeedbackBtn.classList.remove('loading');
+        submitFeedbackBtn.innerHTML = originalSubmitText || 'Submit';
+        submitFeedbackBtn.disabled = true;
+        cancelFeedbackBtn.disabled = false;
+        feedbackReason.disabled = false;
+        
         feedbackModal.removeEventListener('click', handleOverlayClick);
         feedbackReason.removeEventListener('input', handleReasonInput);
         submitFeedbackBtn.removeEventListener('click', handleSubmit);
@@ -369,25 +391,39 @@ function showFeedbackModal(onSuccess: () => void) {
     };
 
     const handleOverlayClick = (e: MouseEvent) => {
-        if (e.target === feedbackModal) {
+        if (e.target === feedbackModal && !isSubmitting) {
             cleanup();
         }
     };
     
     const handleSubmit = async () => {
         const reason = feedbackReason.value.trim();
-        if (reason) {
+        if (!reason || isSubmitting) return;
+        
+        isSubmitting = true;
+        submitFeedbackBtn.classList.add('loading');
+        submitFeedbackBtn.innerHTML = `<div class="spinner"></div>`;
+        cancelFeedbackBtn.disabled = true;
+        feedbackReason.disabled = true;
+
+        try {
             await sendFeedback('thumbs_down', reason);
             onSuccess();
+        } catch (error) {
+            console.error("Failed to submit feedback", error);
+            // Optionally show an error to the user before closing
+        } finally {
+            isSubmitting = false;
             cleanup();
         }
     };
 
     const handleCancel = () => {
-        cleanup();
+        if (!isSubmitting) {
+            cleanup();
+        }
     };
 
-    // Attach event listeners
     feedbackModal.addEventListener('click', handleOverlayClick);
     feedbackReason.addEventListener('input', handleReasonInput);
     submitFeedbackBtn.addEventListener('click', handleSubmit);
@@ -415,13 +451,15 @@ async function sendFeedback(type: 'thumbs_up' | 'thumbs_down', reason?: string) 
         });
 
         if (!res.ok) {
-            // Log the error but don't bother the user with it.
-            console.error('Failed to send feedback:', await res.text());
+            const errorText = await res.text();
+            console.error('Failed to send feedback:', errorText);
+            throw new Error(`Feedback submission failed: ${errorText}`);
         } else {
             console.log(`Feedback '${type}' sent successfully.`);
         }
     } catch (error) {
         console.error('Error sending feedback:', error);
+        throw error; // Re-throw to be caught by the calling function
     }
 }
 

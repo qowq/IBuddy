@@ -555,9 +555,16 @@ html.dark-mode #chat-input::placeholder {
     color: var(--text-color-light);
 }
 
+.textarea-wrapper {
+    position: relative;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
 #feedback-reason {
     width: 100%;
     padding: 0.75rem;
+    padding-bottom: 1.75rem; /* Space for counter */
     border-radius: 0.5rem;
     border: 1px solid var(--border-color);
     background-color: var(--input-bg);
@@ -566,12 +573,25 @@ html.dark-mode #chat-input::placeholder {
     font-size: 1rem;
     resize: vertical;
     min-height: 80px;
-    margin-top: 0.5rem;
 }
 
 #feedback-reason:focus {
     outline: none;
     border-color: var(--input-focus-border);
+}
+
+.char-counter {
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--text-color-light);
+    pointer-events: none; /* So it doesn't interfere with textarea resize handle */
+}
+
+.char-counter.error {
+    color: #ef4444;
+    font-weight: 500;
 }
 
 .modal-actions {
@@ -609,6 +629,26 @@ html.dark-mode .modal-actions .primary-btn:disabled {
     background-color: #404040;
     color: #a0a0a0;
 }
+
+.modal-actions .primary-btn.loading {
+    position: relative;
+    pointer-events: none;
+    color: transparent; /* Hide original text */
+}
+
+.modal-actions .primary-btn.loading .spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1rem; /* 16px */
+    height: 1rem;
+    border: 2px solid color-mix(in srgb, var(--button-text-color) 30%, transparent);
+    border-top-color: var(--button-text-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
 
 .modal-actions .secondary-btn {
     background-color: var(--suggestion-bg);

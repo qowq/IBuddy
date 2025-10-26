@@ -95,7 +95,10 @@
         <div class="modal-content">
             <h3>What can we improve?</h3>
             <p>Your feedback is valuable in helping us improve IBStress.</p>
-            <textarea id="feedback-reason" placeholder="Please provide a reason..." rows="3" maxlength="500"></textarea>
+            <div class="textarea-wrapper">
+                <textarea id="feedback-reason" placeholder="Please provide a reason..." rows="3" maxlength="200"></textarea>
+                <div id="feedback-char-count" class="char-counter">0 / 200</div>
+            </div>
             <div class="modal-actions">
                 <button id="cancel-feedback-btn" class="secondary-btn">Nevermind</button>
                 <button id="submit-feedback-btn" class="primary-btn" disabled>Submit</button>
