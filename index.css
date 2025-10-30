@@ -22,6 +22,7 @@
     --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     --tooltip-bg: #1f2937;
     --tooltip-text-color: #ffffff;
+    --accent-color: #3b82f6;
 }
 
 html.dark-mode {
@@ -45,6 +46,7 @@ html.dark-mode {
     --shadow: none;
     --tooltip-bg: #f9f9f9;
     --tooltip-text-color: #1f2937;
+    --accent-color: #60a5fa;
 }
 
 *,
@@ -57,7 +59,6 @@ html.dark-mode {
 
 html {
     scroll-behavior: smooth;
-    height: 100%;
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -67,17 +68,17 @@ body {
     font-family: var(--font-family);
     line-height: 1.6;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100%;
-    padding-top: 5vh;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
 }
 
 /* --- Main Layout --- */
 #app-container {
     width: 100%;
     max-width: 768px; /* Reduced width for a more focused view */
-    padding: 1rem;
+    padding: 5vh 1rem 1rem 1rem;
+    position: relative;
 }
 
 #chat-container {
@@ -93,6 +94,33 @@ body {
     transition: background-color 0.3s ease;
     border: 1px solid var(--border-color); /* Add border for definition */
 }
+
+/* --- Scroll Down Indicator --- */
+.scroll-down-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2rem;
+    height: 2rem;
+    color: var(--text-color-light);
+    animation: bounce 2s infinite;
+    z-index: 5;
+    opacity: 0.7;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translate(-50%, 0);
+    }
+    40% {
+        transform: translate(-50%, -10px);
+    }
+    60% {
+        transform: translate(-50%, -5px);
+    }
+}
+
 
 /* --- Chat Header --- */
 .chat-header {
@@ -442,6 +470,172 @@ html.dark-mode #chat-input::placeholder {
     opacity: 1;
 }
 
+/* --- SEO Content Section --- */
+#content-section {
+    width: 100%;
+    background-color: var(--chat-container-bg);
+    padding: 4rem 1rem;
+    color: var(--text-color);
+}
+
+.content-wrapper {
+    max-width: 768px;
+    margin: 0 auto;
+}
+
+.content-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+.content-header h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+.content-header h2 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--text-color-light);
+    margin-bottom: 1rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.content-header p {
+    font-size: 1rem;
+    color: var(--text-color-light);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.info-section {
+    margin-bottom: 4rem;
+}
+.info-section h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+.info-section p {
+    color: var(--text-color-light);
+    max-width: 650px;
+    margin: 0 auto;
+    text-align: center;
+}
+.info-section a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+.info-section a:hover {
+    text-decoration: underline;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.feature-card {
+    background-color: var(--suggestion-bg);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    text-align: left;
+}
+.feature-card h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+.feature-card p {
+    font-size: 0.9rem;
+    color: var(--text-color-light);
+    text-align: left;
+}
+.feature-card.testimonial p {
+    font-style: italic;
+    margin-bottom: 1rem;
+}
+.feature-card.testimonial span {
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+/* FAQ Section */
+.faq-container {
+    max-width: 768px;
+    margin: 0 auto;
+}
+.faq-container details {
+    background-color: var(--suggestion-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1.5rem;
+}
+.faq-container summary {
+    font-weight: 500;
+    cursor: pointer;
+    padding: 1rem 0;
+    list-style: none; /* Remove default marker */
+    position: relative;
+    padding-right: 2rem;
+}
+.faq-container summary::-webkit-details-marker {
+    display: none; /* Chrome */
+}
+.faq-container summary::after {
+    content: '+';
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    color: var(--text-color-light);
+    transition: transform 0.2s ease;
+}
+.faq-container details[open] summary::after {
+    transform: translateY(-50%) rotate(45deg);
+}
+.faq-container details p {
+    padding-bottom: 1rem;
+    color: var(--text-color-light);
+    text-align: left;
+}
+
+
+/* --- Footer --- */
+footer {
+    width: 100%;
+    background-color: var(--bg-color);
+    border-top: 1px solid var(--border-color);
+    padding: 2rem 1rem;
+    color: var(--text-color-light);
+    font-size: 0.8rem;
+}
+.footer-content {
+    max-width: 768px;
+    margin: 0 auto;
+    text-align: center;
+}
+.footer-links {
+    margin-top: 0.5rem;
+}
+.footer-links a {
+    color: var(--text-color-light);
+    text-decoration: underline;
+    margin: 0 0.5rem;
+    transition: color 0.2s;
+}
+.footer-links a:hover {
+    color: var(--text-color);
+}
+
+
 /* --- Disclaimer Modal --- */
 #disclaimer-modal {
     position: fixed;
@@ -735,15 +929,13 @@ html.dark-mode .theme-toggle-label .moon {
 /* --- Responsive Design --- */
 @media (max-width: 768px) {
     body {
-        height: 100%; /* Use percentage height for stability */
-        overflow: hidden; /* Prevent the body itself from scrolling */
-        padding-top: 0;
+       padding-top: 0;
     }
 
     #app-container {
         padding: 0;
         width: 100%;
-        height: 100%; /* Fill the new viewport-sized body */
+        height: 100vh;
     }
 
     #chat-container {
@@ -761,5 +953,19 @@ html.dark-mode .theme-toggle-label .moon {
     .chat-header, #chat-form, .suggestion-chips {
         padding-left: 1rem;
         padding-right: 1rem;
+    }
+
+    .scroll-down-indicator {
+        bottom: 1rem;
+    }
+
+    #content-section {
+        padding: 3rem 1rem;
+    }
+    .content-header h1 {
+        font-size: 1.75rem;
+    }
+    .content-header h2 {
+        font-size: 1.125rem;
     }
 }
