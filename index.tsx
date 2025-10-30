@@ -36,6 +36,7 @@ const submitFeedbackBtn = document.getElementById('submit-feedback-btn') as HTML
 // Fix: Cast `cancelFeedbackBtn` to `HTMLButtonElement` to resolve errors where the `disabled` property was accessed on a generic `HTMLElement`.
 const cancelFeedbackBtn = document.getElementById('cancel-feedback-btn') as HTMLButtonElement;
 const feedbackCharCount = document.getElementById('feedback-char-count')!;
+const footerPrivacyLink = document.getElementById('footer-privacy-link')!;
 
 
 // --- State Management ---
@@ -127,6 +128,10 @@ function setupEventListeners() {
   
   // Disclaimer Modal Listeners
   showDisclaimerBtn.addEventListener('click', () => disclaimerModal.classList.remove('hidden'));
+  footerPrivacyLink.addEventListener('click', (e) => {
+    e.preventDefault(); // Prevent page jump
+    disclaimerModal.classList.remove('hidden');
+  });
   closeDisclaimerBtn.addEventListener('click', () => disclaimerModal.classList.add('hidden'));
   disclaimerModal.addEventListener('click', (e) => {
     if (e.target === disclaimerModal) {
@@ -299,7 +304,7 @@ async function sendMessage(message: string) {
             const { actionItem: thumbDownAction, button: thumbDownBtn } = createActionButton(
                 'Bad response',
                 'Bad response',
-                `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path></svg>`
+                `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path></svg>`
             );
             
             thumbUpBtn.addEventListener('click', () => {
@@ -477,7 +482,7 @@ function appendMessage(role: 'user' | 'model', text: string): HTMLDivElement {
   if (role === 'model') {
     const avatar = document.createElement('div');
     avatar.className = 'avatar';
-    avatar.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 7L12 12M22 7L12 12M12 22V12M17 4.5L7 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    avatar.innerHTML = `<svg width="24" height="24" viewBox="0 0 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 7L12 12M22 7L12 12M12 22V12M17 4.5L7 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
     messageElement.appendChild(avatar);
 
     const messageAndFeedbackContainer = document.createElement('div');

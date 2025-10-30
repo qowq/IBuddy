@@ -98,7 +98,7 @@ body {
 /* --- Scroll Down Indicator --- */
 .scroll-down-indicator {
     position: absolute;
-    bottom: 2rem;
+    bottom: 0.5rem;
     left: 50%;
     transform: translateX(-50%);
     width: 2rem;
@@ -531,6 +531,25 @@ html.dark-mode #chat-input::placeholder {
 }
 .info-section a:hover {
     text-decoration: underline;
+}
+
+.cta-link {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 1.5rem;
+    background-color: var(--suggestion-bg);
+    color: var(--text-color);
+    border: 1px solid var(--suggestion-border);
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.cta-link:hover {
+    background-color: var(--suggestion-hover-bg);
+    text-decoration: none;
+    transform: translateY(-2px);
 }
 
 .feature-grid {
