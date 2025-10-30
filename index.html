@@ -53,8 +53,20 @@
                 <div class="theme-switcher">
                     <label for="theme-toggle" class="theme-toggle-label">
                         <input type="checkbox" id="theme-toggle" aria-label="Toggle theme">
-                        <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24" fill="currentColor" width="18" height="18"><path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.106a.75.75 0 010 1.06l-1.591 1.59a.75.75 0 11-1.06-1.06l1.59-1.59a.75.75 0 011.06 0zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5h2.25a.75.75 0 01.75.75zM17.803 17.803a.75.75 0 01-1.06 0l-1.59-1.591a.75.75 0 111.06-1.06l1.59 1.59a.75.75 0 010 1.06zM12 21.75a.75.75 0 01-.75-.75v-2.25a.75.75 0 011.5 0v2.25a.75.75 0 01-.75-.75zM5.197 17.803a.75.75 0 010-1.06l1.59-1.591a.75.75 0 111.06 1.06l-1.59 1.59a.75.75 0 01-1.06 0zM3 12a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H3.75A.75.75 0 013 12zM6.106 5.106a.75.75 0 011.06 0l1.591 1.59a.75.75 0 01-1.06 1.06l-1.59-1.59a.75.75 0 010-1.06z"></path></svg>
-                        <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24" fill="currentColor" width="18" height="18"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 004.463-.949a.75.75 0 01.819.162l.805.806a.75.75 0 01-.162.819A10.5 10.5 0 0118 19.5a10.5 10.5 0 01-10.5-10.5c0-1.31.25-2.565.718-3.722l.806.805z" clip-rule="evenodd"></path></svg>
+                        <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
                     </label>
                 </div>
             </div>
@@ -99,61 +111,94 @@
 
     <section id="content-section">
         <div class="content-wrapper">
-            <header class="content-header">
+            <header class="content-header fade-in">
                 <h1>IB Stress Support Chatbot</h1>
                 <h2>Instant AI Help for IB Students Managing Stress, Pressure, and Burnout</h3>
                 <p>IBStress.com is a free AI-powered chatbot designed to help International Baccalaureate (IB) students manage stress, burnout, and emotional overload. Whether you’re balancing exams, coursework, or CAS, our IB support bot offers instant support, tips, and tools to help you stay balanced and confident.</p>
             </header>
 
             <section class="info-section" id="how-it-helps">
-                <h3>How IBStress.com Helps You Cope</h3>
                 <div class="feature-grid">
-                    <div class="feature-card">
+                    <div class="feature-card fade-in" style="animation-delay: 0.1s;">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                        </div>
                         <h4>Instant, 24/7 Support</h4>
                         <p>Feeling overwhelmed at 2 AM? Our IB stress support chatbot is always online to listen and provide constructive advice, anytime you need it.</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="feature-card fade-in" style="animation-delay: 0.2s;">
+                         <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
+                        </div>
                         <h4>Actionable Study Strategies</h4>
                         <p>Get proven tips for time management, exam preparation, and tackling tough assignments like the Extended Essay and IAs.</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="feature-card fade-in" style="animation-delay: 0.3s;">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" /></svg>
+                        </div>
                         <h4>Mental Health Resources</h4>
                         <p>Access techniques for managing anxiety and IB stress. We provide a safe space to talk and offer guidance on when to seek professional help.</p>
                     </div>
                 </div>
             </section>
             
-            <section class="info-section" id="why-ib-is-stressful">
-                <h3>Why IB Students Struggle With Stress</h3>
-                <p>The International Baccalaureate is a demanding program. The combination of rigorous coursework, internal assessments, the Extended Essay, CAS requirements, and final exams creates a high-pressure environment. It's normal to feel overwhelmed. We built this tool to provide immediate <a href="#how-it-helps">help for IB students</a> facing these unique challenges, making IB mental health a priority.</p>
-            </section>
-
-            <section class="info-section" id="meet-the-bot">
-                <h3>Meet the IB Support Chatbot</h3>
-                <p>Our chatbot is more than just code; it's a friendly peer mentor trained to understand the specific pressures of the IB Diploma Programme. It uses advanced AI to offer empathetic and relevant support, acting as your personal guide through the ups and downs of IB life. It's one of the most accessible IB mental health resources available online.</p>
-                <p><a href="#app-container" class="cta-link">Try the IB Support Chatbot Now ↑</a></p>
+            <section class="info-section dual-layout" id="why-ib-is-stressful">
+                <div class="dual-layout-text fade-in">
+                    <h3>Why IB Students Struggle With Stress</h3>
+                    <p>The International Baccalaureate is a demanding program. The combination of rigorous coursework, internal assessments, the Extended Essay, CAS requirements, and final exams creates a high-pressure environment. It's normal to feel overwhelmed. We built this tool to provide immediate <a href="#how-it-helps">help for IB students</a> facing these unique challenges, making IB mental health a priority.</p>
+                </div>
+                <div class="dual-layout-image fade-in" style="animation-delay: 0.1s;">
+                    <img src="https://images.unsplash.com/photo-1534349942334-78a45a35aa32?q=80&w=1920&auto=format&fit=crop" alt="A student looking thoughtfully at their study materials in a well-lit room.">
+                </div>
             </section>
 
             <section class="info-section" id="testimonials">
-                <h3>Feedback and Student Testimonials</h3>
-                <div class="feature-grid">
-                    <div class="feature-card testimonial">
+                <h3 class="fade-in">Feedback and Student Testimonials</h3>
+                <div class="testimonial-grid">
+                    <div class="testimonial-card fade-in" style="animation-delay: 0.1s;">
+                        <div class="stars">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.868 2.884c.321-.662 1.215-.662 1.536 0l1.681 3.434 3.792.551c.734.107 1.028.999.494 1.517l-2.744 2.674.648 3.776c.124.722-.644 1.27-1.288.941L10 15.347l-3.379 1.776c-.644.329-1.412-.219-1.288-.941l.648-3.776-2.744-2.674c-.534-.518-.24-1.41.494-1.517l3.792-.551 1.681-3.434Z" clip-rule="evenodd" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.868 2.884c.321-.662 1.215-.662 1.536 0l1.681 3.434 3.792.551c.734.107 1.028.999.494 1.517l-2.744 2.674.648 3.776c.124.722-.644 1.27-1.288.941L10 15.347l-3.379 1.776c-.644.329-1.412-.219-1.288-.941l.648-3.776-2.744-2.674c-.534-.518-.24-1.41.494-1.517l3.792-.551 1.681-3.434Z" clip-rule="evenodd" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.868 2.884c.321-.662 1.215-.662 1.536 0l1.681 3.434 3.792.551c.734.107 1.028.999.494 1.517l-2.744 2.674.648 3.776c.124.722-.644 1.27-1.288.941L10 15.347l-3.379 1.776c-.644.329-1.412-.219-1.288-.941l.648-3.776-2.744-2.674c-.534-.518-.24-1.41.494-1.517l3.792-.551 1.681-3.434Z" clip-rule="evenodd" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.868 2.884c.321-.662 1.215-.662 1.536 0l1.681 3.434 3.792.551c.734.107 1.028.999.494 1.517l-2.744 2.674.648 3.776c.124.722-.644 1.27-1.288.941L10 15.347l-3.379 1.776c-.644.329-1.412-.219-1.288-.941l.648-3.776-2.744-2.674c-.534-.518-.24-1.41.494-1.517l3.792-.551 1.681-3.434Z" clip-rule="evenodd" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.868 2.884c.321-.662 1.215-.662 1.536 0l1.681 3.434 3.792.551c.734.107 1.028.999.494 1.517l-2.744 2.674.648 3.776c.124.722-.644 1.27-1.288.941L10 15.347l-3.379 1.776c-.644.329-1.412-.219-1.288-.941l.648-3.776-2.744-2.674c-.534-.518-.24-1.41.494-1.517l3.792-.551 1.681-3.434Z" clip-rule="evenodd" /></svg>
+                        </div>
                         <p>"This chatbot helped me organize my study schedule when I was feeling completely lost. A lifesaver for managing IB stress!"</p>
-                        <span>- Year 2 Student</span>
+                        <div class="author">
+                            <img src="https://i.pravatar.cc/40?u=student1" alt="Student avatar">
+                            <span>- Year 2 Student</span>
+                        </div>
                     </div>
-                     <div class="feature-card testimonial">
+                     <div class="testimonial-card fade-in" style="animation-delay: 0.2s;">
+                        <div class="stars">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.868 2.884c.321-.662 1.215-.662 1.536 0l1.681 3.434 3.792.551c.734.107 1.028.999.494 1.517l-2.744 2.674.648 3.776c.124.722-.644 1.27-1.288.941L10 15.347l-3.379 1.776c-.644.329-1.412-.219-1.288-.941l.648-3.776-2.744-2.674c-.534-.518-.24-1.41.494-1.517l3.792-.551 1.681-3.434Z" clip-rule="evenodd" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.868 2.884c.321-.662 1.215-.662 1.536 0l1.681 3.434 3.792.551c.734.107 1.028.999.494 1.517l-2.744 2.674.648 3.776c.124.722-.644 1.27-1.288.941L10 15.347l-3.379 1.776c-.644.329-1.412-.219-1.288-.941l.648-3.776-2.744-2.674c-.534-.518-.24-1.41.494-1.517l3.792-.551 1.681-3.434Z" clip-rule="evenodd" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.868 2.884c.321-.662 1.215-.662 1.536 0l1.681 3.434 3.792.551c.734.107 1.028.999.494 1.517l-2.744 2.674.648 3.776c.124.722-.644 1.27-1.288.941L10 15.347l-3.379 1.776c-.644.329-1.412-.219-1.288-.941l.648-3.776-2.744-2.674c-.534-.518-.24-1.41.494-1.517l3.792-.551 1.681-3.434Z" clip-rule="evenodd" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.868 2.884c.321-.662 1.215-.662 1.536 0l1.681 3.434 3.792.551c.734.107 1.028.999.494 1.517l-2.744 2.674.648 3.776c.124.722-.644 1.27-1.288.941L10 15.347l-3.379 1.776c-.644.329-1.412-.219-1.288-.941l.648-3.776-2.744-2.674c-.534-.518-.24-1.41.494-1.517l3.792-.551 1.681-3.434Z" clip-rule="evenodd" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.868 2.884c.321-.662 1.215-.662 1.536 0l1.681 3.434 3.792.551c.734.107 1.028.999.494 1.517l-2.744 2.674.648 3.776c.124.722-.644 1.27-1.288.941L10 15.347l-3.379 1.776c-.644.329-1.412-.219-1.288-.941l.648-3.776-2.744-2.674c-.534-.518-.24-1.41.494-1.517l3.792-.551 1.681-3.434Z" clip-rule="evenodd" /></svg>
+                        </div>
                         <p>"It's great to have a non-judgmental space to vent and get quick advice. A fantastic tool for IB support."</p>
-                        <span>- Year 1 Student</span>
+                         <div class="author">
+                            <img src="https://i.pravatar.cc/40?u=student2" alt="Student avatar">
+                            <span>- Year 1 Student</span>
+                        </div>
                     </div>
                 </div>
             </section>
 
-             <section class="info-section" id="about">
-                <h3>Built by IB Students, for IB Students</h3>
-                <p>IBStress was developed by alumni who understand the IB journey firsthand. This project is proudly brought to you by <strong><a href="https://perksbh.com" target="_blank" rel="noopener">perksbh.com</a></strong>, an AI automation agency based in Bahrain, founded by IB students dedicated to creating innovative solutions that make a real difference.</p>
+             <section class="info-section dual-layout reverse" id="about">
+                 <div class="dual-layout-text fade-in">
+                    <h3>Built by IB Students, for IB Students</h3>
+                    <p>IBStress was developed by alumni who understand the IB journey firsthand. This project is proudly brought to you by <strong><a href="https://perksbh.com" target="_blank" rel="noopener">perksbh.com</a></strong>, an AI automation agency based in Bahrain, founded by IB students dedicated to creating innovative solutions that make a real difference.</p>
+                    <p><a href="#app-container" class="cta-link">Try the IB Support Chatbot Now ↑</a></p>
+                 </div>
+                 <div class="dual-layout-image fade-in" style="animation-delay: 0.1s;">
+                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1920&auto=format&fit=crop" alt="A diverse group of students collaborating around a laptop in a bright, modern setting.">
+                 </div>
             </section>
 
-            <section class="info-section" id="faq">
+            <section class="info-section fade-in" id="faq">
                 <h3>Frequently Asked Questions</h3>
                 <div class="faq-container">
                     <details>
