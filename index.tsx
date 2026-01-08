@@ -33,7 +33,6 @@ const closeDisclaimerBtn = document.getElementById('close-disclaimer-btn')!;
 const feedbackModal = document.getElementById('feedback-modal')!;
 const feedbackReason = document.getElementById('feedback-reason') as HTMLTextAreaElement;
 const submitFeedbackBtn = document.getElementById('submit-feedback-btn') as HTMLButtonElement;
-// Fix: Cast `cancelFeedbackBtn` to `HTMLButtonElement` to resolve errors where the `disabled` property was accessed on a generic `HTMLElement`.
 const cancelFeedbackBtn = document.getElementById('cancel-feedback-btn') as HTMLButtonElement;
 const feedbackCharCount = document.getElementById('feedback-char-count')!;
 const footerPrivacyLink = document.getElementById('footer-privacy-link')!;
@@ -90,20 +89,13 @@ const TIPS = [
 
 // --- Main Application Logic ---
 
-/**
- * Initializes the application, sets up event listeners, and starts the chat.
- */
 function main() {
   setupEventListeners();
   applyInitialTheme();
   setWelcomeGreeting();
   displayDailyTip();
-  // The check for API_KEY is now done on the server.
 }
 
-/**
- * Sets up all necessary event listeners for the application.
- */
 function setupEventListeners() {
   chatForm.addEventListener('submit', handleFormSubmit);
   themeToggle.addEventListener('change', handleThemeToggle);
@@ -113,23 +105,17 @@ function setupEventListeners() {
   chatInput.addEventListener('input', autoResizeTextarea);
   chatInput.addEventListener('keydown', handleEnterKey);
   
-  // Fix for the 'sticky' UI on mobile after keyboard closes.
   chatInput.addEventListener('blur', () => {
-    // This issue primarily affects mobile devices where the virtual keyboard
-    // alters the viewport. We check for a mobile-sized screen.
     if (window.matchMedia('(max-width: 768px)').matches) {
-      // A brief timeout allows the browser to finish the keyboard's closing
-      // animation before we force the scroll, preventing a visual jump.
       setTimeout(() => {
         window.scrollTo(0, 0);
       }, 50);
     }
   });
   
-  // Disclaimer Modal Listeners
   showDisclaimerBtn.addEventListener('click', () => disclaimerModal.classList.remove('hidden'));
   footerPrivacyLink.addEventListener('click', (e) => {
-    e.preventDefault(); // Prevent page jump
+    e.preventDefault();
     disclaimerModal.classList.remove('hidden');
   });
   closeDisclaimerBtn.addEventListener('click', () => disclaimerModal.classList.add('hidden'));
@@ -140,9 +126,6 @@ function setupEventListeners() {
   });
 }
 
-/**
- * Displays a daily tip based on the day of the month.
- */
 function displayDailyTip() {
     const dayOfMonth = new Date().getDate();
     const tipIndex = (dayOfMonth - 1) % TIPS.length;
@@ -150,10 +133,6 @@ function displayDailyTip() {
     dailyTipCard.innerHTML = `💡 <strong>Daily Tip:</strong> ${tip}`;
 }
 
-
-/**
- * Sets the greeting message based on the time of day.
- */
 function setWelcomeGreeting() {
     const hour = new Date().getHours();
     if (hour < 12) {
@@ -165,9 +144,6 @@ function setWelcomeGreeting() {
     }
 }
 
-/**
- * Transitions the UI from the welcome screen to the chat view.
- */
 function startChatSession() {
     if (isChatStarted) return;
     welcomeScreen.style.display = 'none';
@@ -175,10 +151,6 @@ function startChatSession() {
     isChatStarted = true;
 }
 
-/**
- * Handles the submission of the chat form.
- * @param {Event} e - The form submission event.
- */
 async function handleFormSubmit(e: Event) {
   e.preventDefault();
   const message = chatInput.value.trim();
@@ -189,10 +161,6 @@ async function handleFormSubmit(e: Event) {
   await sendMessage(message);
 }
 
-/**
- * Handles clicks on the suggestion chip buttons.
- * @param {Event} e - The button click event.
- */
 async function handleSuggestionClick(e: Event) {
     const target = e.target as HTMLButtonElement;
     const prompt = target.dataset.prompt;
@@ -201,11 +169,6 @@ async function handleSuggestionClick(e: Event) {
     await sendMessage(prompt);
 }
 
-
-/**
- * Sends a message to the AI and handles the streaming response.
- * @param {string} message - The message to send.
- */
 async function sendMessage(message: string) {
   startChatSession();
   isLoading = true;
@@ -232,7 +195,6 @@ async function sendMessage(message: string) {
     const responseText = await res.text();
 
     if (!res.ok) {
-      // Try to parse error from serverless function
       try {
         const errorJson = JSON.parse(responseText);
         throw new Error(errorJson.error || `Request failed with status ${res.status}`);
@@ -295,18 +257,18 @@ async function sendMessage(message: string) {
                 }
             });
 
-            // Standardized Lucide Thumbs Up path for 24x24 viewBox
+            // Standardized Lucide Thumbs Up
             const { actionItem: thumbUpAction, button: thumbUpBtn } = createActionButton(
                 'Good response',
                 'Good response',
                 `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z"/></svg>`
             );
             
-            // Standardized Lucide Thumbs Down path for 24x24 viewBox (Fixed "Broken/Cutoff" coordinate issue)
+            // Standardized Lucide Thumbs Down (Fixed path to avoid clipping)
             const { actionItem: thumbDownAction, button: thumbDownBtn } = createActionButton(
                 'Bad response',
                 'Bad response',
-                `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 0-1.92 2.56l2.33 8A2 2 0 0 0 6.5 22H20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-2.76a2 2 0 0 1-1.79-1.11L12 2h0a3.13 3.13 0 0 0-3 3.88Z"/></svg>`
+                `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22h0a3.13 3.13 0 0 1-3-3.88Z"/></svg>`
             );
             
             thumbUpBtn.addEventListener('click', () => {
@@ -318,7 +280,6 @@ async function sendMessage(message: string) {
 
             thumbDownBtn.addEventListener('click', () => {
                 showFeedbackModal(() => {
-                    // This callback runs after feedback is successfully submitted.
                     thumbDownBtn.classList.add('selected-down');
                     thumbUpBtn.disabled = true;
                     thumbDownBtn.disabled = true;
@@ -347,9 +308,6 @@ async function sendMessage(message: string) {
     isLoading = false;
     setFormState(true);
     scrollToBottom();
-
-    // Blurring the input dismisses the keyboard. The 'blur' event listener
-    // will handle the viewport correction for mobile layout issues.
     chatInput.blur();
   }
 }
@@ -418,7 +376,6 @@ function showFeedbackModal(onSuccess: () => void) {
             onSuccess();
         } catch (error) {
             console.error("Failed to submit feedback", error);
-            // Optionally show an error to the user before closing
         } finally {
             isSubmitting = false;
             cleanup();
@@ -461,12 +418,10 @@ async function sendFeedback(type: 'thumbs_up' | 'thumbs_down', reason?: string) 
             const errorText = await res.text();
             console.error('Failed to send feedback:', errorText);
             throw new Error(`Feedback submission failed: ${errorText}`);
-        } else {
-            console.log(`Feedback '${type}' sent successfully.`);
         }
     } catch (error) {
         console.error('Error sending feedback:', error);
-        throw error; // Re-throw to be caught by the calling function
+        throw error;
     }
 }
 
@@ -484,7 +439,6 @@ function appendMessage(role: 'user' | 'model', text: string): HTMLDivElement {
   if (role === 'model') {
     const avatar = document.createElement('div');
     avatar.className = 'avatar';
-    // Matches the EXACT SVG code from index.html header to ensure brand consistency
     avatar.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 7L12 12M22 7L12 12M12 22V12M17 4.5L7 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
     messageElement.appendChild(avatar);
 
@@ -509,11 +463,6 @@ function appendMessage(role: 'user' | 'model', text: string): HTMLDivElement {
   return messageElement;
 }
 
-/**
- * Displays a loading spinner inside a message bubble.
- * @param {HTMLElement} parentElement - The element to append the spinner to.
- * @returns {HTMLDivElement} The spinner element.
- */
 function showLoadingIndicator(parentElement: HTMLElement): HTMLDivElement {
     const spinner = document.createElement('div');
     spinner.classList.add('spinner');
@@ -527,57 +476,20 @@ function showLoadingIndicator(parentElement: HTMLElement): HTMLDivElement {
     return spinner;
 }
 
-
-/**
- * Renders an error message on the welcome screen.
- * @param {string} message - The error message to display.
- */
-function showWelcomeError(message: string) {
-    const suggestionsContainer = document.querySelector('.suggestion-chips')!;
-    suggestionsContainer.innerHTML = ''; 
-
-    const errorElement = document.createElement('div');
-    errorElement.className = 'error-message';
-    errorElement.innerHTML = `<strong>Oops! Connection Failed.</strong><br>${message}<br>The chat is disabled until the connection is restored.`;
-    
-    const dailyTip = document.getElementById('daily-tip-card');
-    if (dailyTip) {
-        dailyTip.insertAdjacentElement('beforebegin', errorElement);
-        errorElement.style.marginBottom = '1rem';
-    } else {
-        welcomeScreen.appendChild(errorElement);
-    }
-    
-    setFormState(false);
-}
-
-/**
- * Enables or disables the chat form inputs.
- * @param {boolean} isEnabled - Whether to enable the form.
- */
 function setFormState(isEnabled: boolean) {
   chatInput.disabled = !isEnabled;
   (chatForm.querySelector('button') as HTMLButtonElement).disabled = !isEnabled;
 }
 
-/**
- * Scrolls the chat messages container to the bottom.
- */
 function scrollToBottom() {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-/**
- * Toggles the theme between light and dark mode.
- */
 function handleThemeToggle() {
     document.documentElement.classList.toggle('dark-mode');
     localStorage.setItem('theme', document.documentElement.classList.contains('dark-mode') ? 'dark' : 'light');
 }
 
-/**
- * Applies the theme from localStorage on initial load.
- */
 function applyInitialTheme() {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
@@ -586,18 +498,11 @@ function applyInitialTheme() {
     }
 }
 
-/**
- * Auto-resizes the textarea height based on content.
- */
 function autoResizeTextarea() {
     chatInput.style.height = 'auto';
     chatInput.style.height = `${chatInput.scrollHeight}px`;
 }
 
-/**
- * Handles the Enter key press in the textarea.
- * @param {KeyboardEvent} e
- */
 function handleEnterKey(e: KeyboardEvent) {
     if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -605,12 +510,6 @@ function handleEnterKey(e: KeyboardEvent) {
     }
 }
 
-/**
- * A very simple and safe Markdown to HTML converter.
- * Supports **bold**, *italic*, and newlines.
- * @param {string} text The text to convert.
- * @returns {string} The HTML string.
- */
 function simpleMarkdownToHtml(text: string): string {
     const sanitizedText = text
         .replace(/&/g, '&amp;')
@@ -623,6 +522,4 @@ function simpleMarkdownToHtml(text: string): string {
         .replace(/\n/g, '<br>'); 
 }
 
-
-// --- Entry Point ---
 main();
