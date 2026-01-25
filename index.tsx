@@ -13,7 +13,7 @@ const SYSTEM_INSTRUCTION = {
   role: "model",
   parts: [
     {
-      text: "You are a friendly, supportive, and encouraging peer mentor for International Baccalaureate (IB) students. Your name is 'IBStress'. You are not a professional counselor, but a helpful AI friend. Keep your responses concise, positive, and easy to understand. Use emojis where appropriate to maintain a friendly tone. Your primary goal is to help students with study tips, stress management, general IB advice, and well-being. Always prioritize safety and if a topic is sensitive or outside your scope (like a mental health crises), gently guide them to seek help from a professional, like a school counselor."
+      text: "You are a friendly, supportive, and encouraging peer mentor for International Baccalaureate (IB) students. Your name is 'IBStress'. You are not a professional counselor, but a helpful AI friend created by a fellow IB student. Keep your responses concise, positive, and easy to understand. Use emojis where appropriate to maintain a friendly tone. Your primary goal is to help students with study tips, stress management, general IB advice, and well-being. Always prioritize safety and if a topic is sensitive or outside your scope (like a mental health crises), gently guide them to seek help from a professional, like a school counselor."
     }
   ],
 };
@@ -264,7 +264,7 @@ async function sendMessage(message: string) {
                 `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z"/></svg>`
             );
             
-            // RESTORED Thumbs Down SVG path (Using Lucide standard coordinates that work)
+            // RESTORED Thumbs Down SVG path
             const { actionItem: thumbDownAction, button: thumbDownBtn } = createActionButton(
                 'Bad response',
                 'Bad response',
@@ -301,7 +301,7 @@ async function sendMessage(message: string) {
     }
     const contentWrapper = aiMessageElement.querySelector('.message-content');
     if (contentWrapper) {
-        contentWrapper.innerHTML = `Sorry, I'm having a bit of trouble connecting right now. 😓 Our mentor team has been notified. Please try again in a few minutes!`;
+        contentWrapper.innerHTML = `Sorry, I'm having a bit of trouble connecting right now. 😓 I have been notified. Please try again in a few minutes!`;
     }
   } finally {
     isLoading = false;
@@ -438,7 +438,6 @@ function appendMessage(role: 'user' | 'model', text: string): HTMLDivElement {
   if (role === 'model') {
     const avatar = document.createElement('div');
     avatar.className = 'avatar';
-    // Matches the EXACT SVG from index.html header
     avatar.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 7L12 12M22 7L12 12M12 22V12M17 4.5L7 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
     messageElement.appendChild(avatar);
 
