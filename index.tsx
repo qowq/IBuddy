@@ -6,7 +6,16 @@
 // --- Configuration ---
 const CHAT_API_ENDPOINT = '/.netlify/functions/chat';
 const FEEDBACK_API_ENDPOINT = '/.netlify/functions/feedback';
+const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID'; // Replace with your actual Client ID
 
+// --- Session & State ---
+// 1. Session ID Generation (In-Memory/SessionStorage)
+const sessionId = sessionStorage.getItem('sessionId') || crypto.randomUUID();
+sessionStorage.setItem('sessionId', sessionId);
+
+// 2. Google Drive "MCP" Connection State (In-Memory)
+let tempGoogleToken: string | null = null;
+let googleTokenClient: any = null;
 
 // System instruction for the chatbot
 const SYSTEM_INSTRUCTION = {
@@ -36,6 +45,7 @@ const submitFeedbackBtn = document.getElementById('submit-feedback-btn') as HTML
 const cancelFeedbackBtn = document.getElementById('cancel-feedback-btn') as HTMLButtonElement;
 const feedbackCharCount = document.getElementById('feedback-char-count')!;
 const footerPrivacyLink = document.getElementById('footer-privacy-link')!;
+const connectDriveBtn = document.getElementById('connect-drive-btn') as HTMLButtonElement;
 
 
 // --- State Management ---
@@ -94,6 +104,7 @@ function main() {
   applyInitialTheme();
   setWelcomeGreeting();
   displayDailyTip();
+  initGoogleDriveAuth();
 }
 
 function setupEventListeners() {
@@ -124,6 +135,35 @@ function setupEventListeners() {
         disclaimerModal.classList.add('hidden');
     }
   });
+
+  connectDriveBtn.addEventListener('click', handleConnectDrive);
+}
+
+// 2. Google Identity Services initTokenClient
+function initGoogleDriveAuth() {
+    // We wait until the GSI script is loaded
+    const checkGsi = setInterval(() => {
+        if (typeof (window as any).google !== 'undefined') {
+            clearInterval(checkGsi);
+            googleTokenClient = (window as any).google.accounts.oauth2.initTokenClient({
+                client_id: GOOGLE_CLIENT_ID,
+                scope: 'https://www.googleapis.com/auth/drive.readonly',
+                callback: (response: any) => {
+                    if (response.access_token) {
+                        tempGoogleToken = response.access_token;
+                        connectDriveBtn.classList.add('connected');
+                        connectDriveBtn.querySelector('span')!.textContent = 'Drive Connected';
+                    }
+                },
+            });
+        }
+    }, 100);
+}
+
+function handleConnectDrive() {
+    if (googleTokenClient) {
+        googleTokenClient.requestAccessToken();
+    }
 }
 
 function displayDailyTip() {
@@ -169,6 +209,7 @@ async function handleSuggestionClick(e: Event) {
     await sendMessage(prompt);
 }
 
+// 3. Main Webhook Payload Update
 async function sendMessage(message: string) {
   startChatSession();
   isLoading = true;
@@ -185,6 +226,8 @@ async function sendMessage(message: string) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
+            sessionId: sessionId,
+            google_token: tempGoogleToken,
             history: chatHistory,
             body: {
                 text: message
@@ -272,7 +315,7 @@ async function sendMessage(message: string) {
             );
             
             thumbUpBtn.addEventListener('click', () => {
-                sendFeedback('thumbs_up');
+                sendFeedback('thumbs_up', undefined, message, responseText);
                 thumbUpBtn.classList.add('selected-up');
                 thumbUpBtn.disabled = true;
                 thumbDownBtn.disabled = true;
@@ -283,7 +326,7 @@ async function sendMessage(message: string) {
                     thumbDownBtn.classList.add('selected-down');
                     thumbUpBtn.disabled = true;
                     thumbDownBtn.disabled = true;
-                });
+                }, message, responseText);
             });
             
             feedbackActions.appendChild(copyAction);
@@ -315,7 +358,7 @@ async function sendMessage(message: string) {
  * Shows the feedback modal and handles its interactions.
  * @param {() => void} onSuccess - Callback function to execute after successfully submitting feedback.
  */
-function showFeedbackModal(onSuccess: () => void) {
+function showFeedbackModal(onSuccess: () => void, originalQuestion: string, aiAnswer: string) {
     feedbackModal.classList.remove('hidden');
     feedbackReason.value = '';
     submitFeedbackBtn.disabled = true;
@@ -371,7 +414,7 @@ function showFeedbackModal(onSuccess: () => void) {
         feedbackReason.disabled = true;
 
         try {
-            await sendFeedback('thumbs_down', reason);
+            await sendFeedback('thumbs_down', reason, originalQuestion, aiAnswer);
             onSuccess();
         } catch (error) {
             console.error("Failed to submit feedback", error);
@@ -396,14 +439,13 @@ function showFeedbackModal(onSuccess: () => void) {
 
 /**
  * Sends feedback to the backend.
- * @param {'thumbs_up' | 'thumbs_down'} type The type of feedback.
- * @param {string} [reason] Optional reason for negative feedback.
+ * 4. Feedback System Payload Update
  */
-async function sendFeedback(type: 'thumbs_up' | 'thumbs_down', reason?: string) {
+async function sendFeedback(type: 'thumbs_up' | 'thumbs_down', reason?: string, originalQuestion?: string, aiAnswer?: string) {
     try {
         const payload = type === 'thumbs_up' 
-            ? { thumbsup: true } 
-            : { thumbsdown: true, ...(reason && { reason }) };
+            ? { thumbsup: true, originalQuestion, aiAnswer } 
+            : { thumbsdown: true, reason, originalQuestion, aiAnswer };
 
         const res = await fetch(FEEDBACK_API_ENDPOINT, {
             method: 'POST',

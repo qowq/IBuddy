@@ -154,6 +154,45 @@ body {
     color: var(--text-color-light);
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--suggestion-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color-light);
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.75rem;
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.header-btn:hover {
+    background: var(--suggestion-hover-bg);
+    color: var(--text-color);
+}
+
+.header-btn.connected {
+    background: #d1fae5;
+    border-color: #10b981;
+    color: #065f46;
+}
+
+html.dark-mode .header-btn.connected {
+    background: #064e3b;
+    border-color: #059669;
+    color: #34d399;
+}
+
 /* --- Welcome Screen --- */
 #welcome-screen {
     flex-grow: 1;
