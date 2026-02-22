@@ -703,7 +703,7 @@ html.dark-mode #chat-input::placeholder {
     color: var(--subtle-text-color);
 }
 
-/* FAQ Section */
+/* FAQ Section Refined */
 .faq-container {
     max-width: 768px;
     margin: 0 auto;
@@ -713,38 +713,55 @@ html.dark-mode #chat-input::placeholder {
     background-color: var(--surface-color);
     border-bottom: 1px solid var(--surface-border-color);
     margin-bottom: 0.5rem;
-    padding: 0.5rem 0;
+    padding: 0 1.25rem; /* Increased horizontal padding */
+    border-radius: 0.75rem;
+    transition: background-color 0.2s ease;
+}
+
+.faq-container details:hover {
+    background-color: var(--surface-ground-color);
 }
 
 .faq-container summary {
     font-weight: 500;
     cursor: pointer;
-    padding: 1rem 0;
+    padding: 1.25rem 0;
     list-style: none;
     position: relative;
-    padding-right: 2rem;
+    padding-right: 3rem; /* More space for icon */
     color: var(--text-color);
+    user-select: none;
 }
+
 .faq-container summary::-webkit-details-marker {
     display: none;
 }
+
 .faq-container summary::after {
     content: '+';
     position: absolute;
-    right: 0.5rem;
+    right: 0;
     top: 50%;
     transform: translateY(-50%);
     font-size: 1.5rem;
     color: var(--subtle-text-color);
     transition: transform 0.2s ease;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
 .faq-container details[open] summary::after {
     transform: translateY(-50%) rotate(45deg);
 }
+
 .faq-container details p {
-    padding: 0 0 1rem;
+    padding: 0 0 1.25rem;
     color: var(--subtle-text-color);
     text-align: left;
+    font-size: 0.95rem;
 }
 
 /* --- Footer --- */
