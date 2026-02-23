@@ -217,8 +217,16 @@ async function sendMessage(message: string) {
   appendMessage('user', message);
 
   const aiMessageElement = appendMessage('model', '');
-  const loadingSpinner = showLoadingIndicator(aiMessageElement);
+  const { spinner: loadingContainer, statusText } = showLoadingIndicator(aiMessageElement, true);
   
+  let secondsElapsed = 0;
+  const timer = setInterval(() => {
+    secondsElapsed++;
+    if (statusText) {
+      updateLoadingStatus(statusText, secondsElapsed);
+    }
+  }, 1000);
+
   try {
     const res = await fetch(CHAT_API_ENDPOINT, {
         method: 'POST',
@@ -253,8 +261,9 @@ async function sendMessage(message: string) {
     chatHistory.push({ role: 'user', parts: [{ text: message }] });
     chatHistory.push({ role: 'model', parts: [{ text: responseText }] });
     
-    if (loadingSpinner.parentNode) {
-        loadingSpinner.remove();
+    clearInterval(timer);
+    if (loadingContainer.parentNode) {
+        loadingContainer.remove();
     }
     const contentWrapper = aiMessageElement.querySelector('.message-content');
     if (contentWrapper) {
@@ -339,8 +348,11 @@ async function sendMessage(message: string) {
 
   } catch (error) {
     console.error("Error sending message:", error);
-    if (loadingSpinner.parentNode) {
-        loadingSpinner.remove();
+    // @ts-ignore
+    if (typeof timer !== 'undefined') clearInterval(timer);
+    // @ts-ignore
+    if (typeof loadingContainer !== 'undefined' && loadingContainer.parentNode) {
+        loadingContainer.remove();
     }
     const contentWrapper = aiMessageElement.querySelector('.message-content');
     if (contentWrapper) {
@@ -504,17 +516,46 @@ function appendMessage(role: 'user' | 'model', text: string): HTMLDivElement {
   return messageElement;
 }
 
-function showLoadingIndicator(parentElement: HTMLElement): HTMLDivElement {
+function showLoadingIndicator(parentElement: HTMLElement, withStatus: boolean = false): { spinner: HTMLElement, statusText?: HTMLElement } {
     const spinner = document.createElement('div');
     spinner.classList.add('spinner');
+    
+    let statusText: HTMLElement | undefined;
+    let container: HTMLElement = spinner;
+
+    if (withStatus) {
+        container = document.createElement('div');
+        container.classList.add('loading-container');
+        container.appendChild(spinner);
+        
+        statusText = document.createElement('span');
+        statusText.classList.add('loading-status');
+        statusText.innerText = "Thinking... ✨";
+        container.appendChild(statusText);
+    }
+
     const contentWrapper = parentElement.querySelector('.message-content');
     if (contentWrapper) {
-        contentWrapper.appendChild(spinner);
+        contentWrapper.appendChild(container);
     } else {
-        parentElement.appendChild(spinner);
+        parentElement.appendChild(container);
     }
     scrollToBottom();
-    return spinner;
+    return { spinner: container, statusText };
+}
+
+function updateLoadingStatus(statusElement: HTMLElement, seconds: number) {
+    if (seconds > 15) {
+        statusElement.innerText = "Still working... this is a complex one! 🧠";
+    } else if (seconds > 8) {
+        if (tempGoogleToken) {
+            statusElement.innerText = "Reading your documents, hold on... 📄";
+        } else {
+            statusElement.innerText = "Processing your request... 🔎";
+        }
+    } else {
+        statusElement.innerText = "Thinking... ✨";
+    }
 }
 
 function setFormState(isEnabled: boolean) {

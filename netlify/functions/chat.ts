@@ -40,20 +40,13 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
   try {
     const requestBody = JSON.parse(event.body || "{}");
 
-    // Add a timeout to detect if n8n is hanging (e.g., workflow disabled)
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 8000); 
-
     const response = await fetch(WEBHOOK_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(requestBody),
-      signal: controller.signal
     });
-
-    clearTimeout(timeoutId);
 
     if (!response.ok) {
       const errorText = await response.text();

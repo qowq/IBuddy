@@ -1001,6 +1001,19 @@ html.dark-mode .modal-actions .primary-btn:disabled {
 }
 
 /* --- Loading Spinner --- */
+.loading-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+}
+
+.loading-status {
+    font-size: 0.875rem;
+    color: var(--text-color-light);
+    font-style: italic;
+}
+
 .spinner {
     width: 20px;
     height: 20px;
