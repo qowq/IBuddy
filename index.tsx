@@ -13,8 +13,8 @@ const GOOGLE_CLIENT_ID = '723711001614-102i4ikgfl3s3okgih8qjurnbgn4ob13.apps.goo
 const sessionId = sessionStorage.getItem('sessionId') || crypto.randomUUID();
 sessionStorage.setItem('sessionId', sessionId);
 
-// 2. Google Drive "MCP" Connection State (In-Memory)
-let tempGoogleToken: string | null = null;
+// 2. Google Drive "MCP" Connection State (In-Memory/SessionStorage)
+let tempGoogleToken: string | null = sessionStorage.getItem('google_token');
 let googleTokenClient: any = null;
 
 // System instruction for the chatbot
@@ -137,10 +137,17 @@ function setupEventListeners() {
   });
 
   connectDriveBtn.addEventListener('click', handleConnectDrive);
+  window.addEventListener('focus', checkTokenValidity);
 }
 
 // 2. Google Identity Services initTokenClient
 function initGoogleDriveAuth() {
+    // Check if we have a valid token on load
+    checkTokenValidity();
+    if (tempGoogleToken) {
+        updateDriveUI(true);
+    }
+
     // We wait until the GSI script is loaded
     const checkGsi = setInterval(() => {
         if (typeof (window as any).google !== 'undefined') {
@@ -150,14 +157,43 @@ function initGoogleDriveAuth() {
                 scope: 'https://www.googleapis.com/auth/drive.readonly',
                 callback: (response: any) => {
                     if (response.access_token) {
+                        const expiryTime = Date.now() + (3540 * 1000); // 59 minutes from now
                         tempGoogleToken = response.access_token;
-                        connectDriveBtn.classList.add('connected');
-                        connectDriveBtn.querySelector('span')!.textContent = 'Drive Connected';
+                        sessionStorage.setItem('google_token', tempGoogleToken);
+                        sessionStorage.setItem('token_expiry', expiryTime.toString());
+                        updateDriveUI(true);
                     }
                 },
             });
         }
     }, 100);
+}
+
+function checkTokenValidity() {
+    const expiry = sessionStorage.getItem('token_expiry');
+    const currentTime = Date.now();
+
+    if (expiry && currentTime > parseInt(expiry, 10)) {
+        // Token has expired!
+        sessionStorage.removeItem('google_token');
+        sessionStorage.removeItem('token_expiry');
+        tempGoogleToken = null;
+        updateDriveUI(false);
+        alert("Your Google Drive session has expired for security. Please reconnect.");
+    } else if (!sessionStorage.getItem('google_token')) {
+        tempGoogleToken = null;
+        updateDriveUI(false);
+    }
+}
+
+function updateDriveUI(isConnected: boolean) {
+    if (isConnected) {
+        connectDriveBtn.classList.add('connected');
+        connectDriveBtn.querySelector('span')!.textContent = 'Drive Connected';
+    } else {
+        connectDriveBtn.classList.remove('connected');
+        connectDriveBtn.querySelector('span')!.textContent = 'Connect Drive';
+    }
 }
 
 function handleConnectDrive() {
@@ -211,6 +247,7 @@ async function handleSuggestionClick(e: Event) {
 
 // 3. Main Webhook Payload Update
 async function sendMessage(message: string) {
+  checkTokenValidity();
   startChatSession();
   isLoading = true;
   setFormState(false);
