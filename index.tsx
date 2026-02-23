@@ -4,7 +4,7 @@
  */
 
 // --- Configuration ---
-const CHAT_API_ENDPOINT = '/.netlify/functions/chat';
+const CHAT_API_ENDPOINT = 'https://hamzeh1128.app.n8n.cloud/webhook/IBuddy';
 const FEEDBACK_API_ENDPOINT = '/.netlify/functions/feedback';
 const GOOGLE_CLIENT_ID = '723711001614-102i4ikgfl3s3okgih8qjurnbgn4ob13.apps.googleusercontent.com'; // Replace with your actual Client ID
 
@@ -264,6 +264,10 @@ async function sendMessage(message: string) {
     }
   }, 1000);
 
+  // Add a 5-minute timeout as requested
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5 * 60 * 1000);
+
   try {
     const res = await fetch(CHAT_API_ENDPOINT, {
         method: 'POST',
@@ -277,8 +281,11 @@ async function sendMessage(message: string) {
             body: {
                 text: message
             }
-        })
+        }),
+        signal: controller.signal
     });
+    
+    clearTimeout(timeoutId);
 
     const responseText = await res.text();
 
