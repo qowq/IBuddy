@@ -53,7 +53,7 @@
                 <div class="header-actions">
                     <button id="connect-drive-btn" class="header-btn" title="Connect Google Drive">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M7.74 3.522l-.005-.01s.005.01 0 0zM19.745 3.522l.005-.01s-.005.01 0 0zM7.069 4.696L2.03 13.337l3.015 5.155L10.112 10 7.069 4.696zM15.46 4.696L10.388 13.41 7.37 18.577h12.085l3.033-5.24-7.028-8.641zm-1.332 0h-4.256l5.059 8.714 4.256-8.714h-5.059z"/>
+                            <path d="M7.71 3.5L1.15 15L4.58 21L11.13 9.5M9.73 15L6.3 21H19.42L22.85 15M22.28 14L15.42 2H8.58L8.57 2L15.43 14H22.28Z"/>
                         </svg>
                         <span>Connect Drive</span>
                     </button>
@@ -95,6 +95,7 @@
                 <button data-prompt="Help me plan my study week">🗓️ Time Management</button>
                 <button data-prompt="How can I deal with exam stress?">🧘 Stress Relief</button>
                 <button data-prompt="Suggest a fun and easy CAS activity">✨ CAS Ideas</button>
+                <button data-prompt="Explain a file from my google drive">📂 Explain Drive File</button>
             </div>
             
             <form id="chat-form">
@@ -250,14 +251,40 @@
                     <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clip-rule="evenodd" />
                   </svg>                  
             </button>
-            <h3>Disclaimer & Privacy Policy</h3>
+            <h3>Privacy Policy & Terms of Service</h3>
+            <p><strong>Effective Date:</strong> February 23, 2026</p>
+            
+            <h4>1. Introduction</h4>
+            <p>IBStress ("the Application," "we," "our") is a generative AI peer-mentoring platform designed for educational support. This Privacy Policy outlines our commitment to data minimization, user privacy, and the secure handling of information when interacting with our services and integrated third-party platforms, specifically Google Drive.</p>
+            
+            <h4>2. Data Collection and Processing</h4>
+            <p>We adhere to the principle of "Data Minimization." We only process the information strictly necessary to provide the Application's core functions.</p>
             <ul>
-                <li><strong>AI Limitations:</strong> IBStress is an experimental AI peer mentor. Responses are for guidance only and may not always be accurate, complete, or tailored to your situation. Always verify critical information with official IB sources, teachers, or other trusted authorities.</li>
-                <li><strong>Not a Therapist:</strong> IBStress is not a substitute for professional medical, mental health, or legal advice. If you are in crisis or experiencing severe anxiety, depression, or self-harm thoughts, contact a school counselor, a trusted adult, or a licensed professional immediately.</li>
-                <li><strong>Data & Privacy:</strong> Interaction data is collected anonymously to improve the tool. No personal chat history is ever logged or stored. Conversations are processed in real-time and are not retained. Please do not share sensitive personal information.</li>
-                <li><strong>Use at Your Own Risk:</strong> Your use of IBStress is at your own discretion. The creator is not liable for any issues, consequences, or misunderstandings resulting from your conversations.</li>
-                <li><strong>Safe Use Reminder:</strong> IBStress is designed to provide general IB guidance only. It should not be used for academic cheating, unsafe activities, or risky decisions.</li>
+                <li><strong>Temporary Session Data:</strong> To maintain context during a conversation, the Application retains a temporary record of the current dialogue. This data is stored in your browser’s volatile memory (sessionStorage) and is purged upon the termination of the browser tab or session.</li>
+                <li><strong>Google Drive Integration:</strong> By granting access to Google Drive, the Application is authorized for Read-Only access. We do not store, modify, or delete your files. The access token is held locally in your browser and is not persisted on our servers.</li>
+                <li><strong>Non-Personal Feedback Data:</strong> We collect specific interaction logs only when a user voluntarily submits an optional "Feedback" report or a "thumbs up/thumbs down" interaction log.</li>
             </ul>
+
+            <h4>3. The Anonymization Protocol ("Censoring Agent")</h4>
+            <p>To ensure the privacy of our student community, all voluntary submitted feedback and interaction metrics undergoes an automated Sanitization Process before permanent storage.</p>
+            <ul>
+                <li><strong>Redaction:</strong> Our proprietary "Censoring Agent" scans all voluntary submitted feedback text to identify and redact Personally Identifiable Information (PII), including but not limited to: legal names, email addresses, and student identification numbers.</li>
+                <li><strong>Purpose:</strong> These anonymized logs are used solely for the technical improvement of the Application’s response accuracy and performance.</li>
+                <li><strong>Data Security:</strong> All data in transit is protected by industry-standard TLS encryption.</li>
+            </ul>
+
+            <h4>5. User Responsibilities & Academic Integrity</h4>
+            <ul>
+                <li><strong>AI Guidance:</strong> IBStress provides general peer guidance. It is not an official representative of the International Baccalaureate (IB) or your school. Users must verify all critical information with official curriculum documents.</li>
+                <li><strong>Wellness Warning:</strong> This Application is not a substitute for professional mental health support. If you are experiencing high levels of distress, please contact a school counselor or a licensed professional.</li>
+                <li><strong>Academic Honesty:</strong> Users are expected to utilize this tool in compliance with their institution’s Academic Integrity policies. IBStress is an aid for understanding and organization, not a tool for unauthorized assessment completion.</li>
+            </ul>
+
+            <h4>6. Your Rights</h4>
+            <p>Under the Bahrain Personal Data Protection Law (PDPL), you have the right to know how your data is handled. Since IBStress does not maintain user accounts or permanent personal databases, the "Right to Erasure" is inherently satisfied by closing your session.</p>
+
+            <h4>7. Limitation of Liability</h4>
+            <p>The creator of IBStress shall not be held liable for any academic outcomes, technical errors, or data issues resulting from the use of this experimental tool. Use of the Application constitutes acceptance of these terms.</p>
         </div>
     </div>
 
