@@ -6,7 +6,7 @@
 // --- Configuration ---
 const CHAT_API_ENDPOINT = '/.netlify/functions/chat';
 const FEEDBACK_API_ENDPOINT = '/.netlify/functions/feedback';
-const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID'; // Replace with your actual Client ID
+const GOOGLE_CLIENT_ID = '723711001614-102i4ikgfl3s3okgih8qjurnbgn4ob13.apps.googleusercontent.com'; // Replace with your actual Client ID
 
 // --- Session & State ---
 // 1. Session ID Generation (In-Memory/SessionStorage)
