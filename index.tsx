@@ -312,6 +312,16 @@ async function sendMessage(message: string) {
     const contentWrapper = aiMessageElement.querySelector('.message-content');
     if (contentWrapper) {
         contentWrapper.innerHTML = simpleMarkdownToHtml(responseText);
+        
+        // Render Math (KaTeX)
+        if ((window as any).renderMathInElement) {
+            (window as any).renderMathInElement(contentWrapper, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
+        }
 
         const messageAndFeedbackContainer = aiMessageElement.querySelector('.message-and-feedback');
         if (messageAndFeedbackContainer) {
