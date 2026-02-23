@@ -338,23 +338,25 @@ html.dark-mode .gradient-orb {
 .suggestion-chips {
     display: flex;
     gap: 0.5rem;
-    padding: 0.5rem 1.5rem 0.75rem;
+    padding: 0.5rem 0.5rem 0.75rem;
     overflow-x: auto;
     flex-shrink: 0;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    justify-content: center;
 }
+
 .suggestion-chips::-webkit-scrollbar {
     display: none;
 }
 
 .suggestion-chips button {
-    padding: 0.5rem 0.875rem;
+    padding: 0.4rem 0.75rem;
     border-radius: 1rem;
     background-color: var(--suggestion-bg);
     color: var(--text-color);
     border: 1px solid var(--suggestion-border);
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-family: inherit;
     font-weight: 500;
     cursor: pointer;
