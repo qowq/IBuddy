@@ -124,10 +124,14 @@ function setupEventListeners() {
     }
   });
   
-  showDisclaimerBtn.addEventListener('click', () => disclaimerModal.classList.remove('hidden'));
+  showDisclaimerBtn.addEventListener('click', () => {
+    disclaimerModal.classList.remove('hidden');
+    disclaimerModal.scrollTop = 0;
+  });
   footerPrivacyLink.addEventListener('click', (e) => {
     e.preventDefault();
     disclaimerModal.classList.remove('hidden');
+    disclaimerModal.scrollTop = 0;
   });
   closeDisclaimerBtn.addEventListener('click', () => disclaimerModal.classList.add('hidden'));
   disclaimerModal.addEventListener('click', (e) => {
@@ -426,6 +430,7 @@ async function sendMessage(message: string) {
  */
 function showFeedbackModal(onSuccess: () => void, originalQuestion: string, aiAnswer: string) {
     feedbackModal.classList.remove('hidden');
+    feedbackModal.scrollTop = 0;
     feedbackReason.value = '';
     submitFeedbackBtn.disabled = true;
     feedbackReason.focus();
@@ -546,7 +551,7 @@ function appendMessage(role: 'user' | 'model', text: string): HTMLDivElement {
   if (role === 'model') {
     const avatar = document.createElement('div');
     avatar.className = 'avatar';
-    avatar.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 7L12 12M22 7L12 12M12 22V12M17 4.5L7 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    avatar.innerHTML = `<img src="https://i.ibb.co/7xsPzQcg/Screenshot-2026-02-26-at-1-44-27-PM.png" alt="IBStress Bot" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
     messageElement.appendChild(avatar);
 
     const messageAndFeedbackContainer = document.createElement('div');
