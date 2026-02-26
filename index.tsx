@@ -44,7 +44,6 @@ const feedbackReason = document.getElementById('feedback-reason') as HTMLTextAre
 const submitFeedbackBtn = document.getElementById('submit-feedback-btn') as HTMLButtonElement;
 const cancelFeedbackBtn = document.getElementById('cancel-feedback-btn') as HTMLButtonElement;
 const feedbackCharCount = document.getElementById('feedback-char-count')!;
-const footerPrivacyLink = document.getElementById('footer-privacy-link')!;
 const connectDriveBtn = document.getElementById('connect-drive-btn') as HTMLButtonElement;
 
 
@@ -125,11 +124,6 @@ function setupEventListeners() {
   });
   
   showDisclaimerBtn.addEventListener('click', () => {
-    disclaimerModal.classList.remove('hidden');
-    disclaimerModal.scrollTop = 0;
-  });
-  footerPrivacyLink.addEventListener('click', (e) => {
-    e.preventDefault();
     disclaimerModal.classList.remove('hidden');
     disclaimerModal.scrollTop = 0;
   });
