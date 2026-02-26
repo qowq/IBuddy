@@ -193,6 +193,18 @@ html.dark-mode .header-btn.connected {
     color: #34d399;
 }
 
+.header-btn.disconnect-confirm {
+    background: #fee2e2;
+    border-color: #ef4444;
+    color: #991b1b;
+}
+
+html.dark-mode .header-btn.disconnect-confirm {
+    background: #450a0a;
+    border-color: #dc2626;
+    color: #f87171;
+}
+
 /* --- Welcome Screen --- */
 #welcome-screen {
     flex-grow: 1;

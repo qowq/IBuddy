@@ -16,6 +16,7 @@ sessionStorage.setItem('sessionId', sessionId);
 // 2. Google Drive "MCP" Connection State (In-Memory/SessionStorage)
 let tempGoogleToken: string | null = sessionStorage.getItem('google_token');
 let googleTokenClient: any = null;
+let isConfirmingDisconnect = false;
 
 // System instruction for the chatbot
 const SYSTEM_INSTRUCTION = {
@@ -185,6 +186,8 @@ function checkTokenValidity() {
 }
 
 function updateDriveUI(isConnected: boolean) {
+    isConfirmingDisconnect = false;
+    connectDriveBtn.classList.remove('disconnect-confirm');
     if (isConnected) {
         connectDriveBtn.classList.add('connected');
         connectDriveBtn.querySelector('span')!.textContent = 'Drive Connected';
@@ -195,7 +198,26 @@ function updateDriveUI(isConnected: boolean) {
 }
 
 function handleConnectDrive() {
-    if (googleTokenClient) {
+    if (tempGoogleToken) {
+        if (!isConfirmingDisconnect) {
+            isConfirmingDisconnect = true;
+            connectDriveBtn.classList.add('disconnect-confirm');
+            connectDriveBtn.querySelector('span')!.textContent = 'Disconnect?';
+            
+            // Auto-revert after 3 seconds if not clicked again
+            setTimeout(() => {
+                if (isConfirmingDisconnect && tempGoogleToken) {
+                    updateDriveUI(true);
+                }
+            }, 3000);
+        } else {
+            // Perform disconnect
+            sessionStorage.removeItem('google_token');
+            sessionStorage.removeItem('token_expiry');
+            tempGoogleToken = null;
+            updateDriveUI(false);
+        }
+    } else if (googleTokenClient) {
         googleTokenClient.requestAccessToken();
     }
 }
