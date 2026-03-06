@@ -4,7 +4,7 @@
  */
 
 // --- Configuration ---
-const CHAT_API_ENDPOINT = 'https://hamzeh1128.app.n8n.cloud/webhook/IBuddy';
+const CHAT_API_ENDPOINT = 'https://personaln8n.perksbh.com/webhook/IBStress';
 const FEEDBACK_API_ENDPOINT = '/.netlify/functions/feedback';
 const GOOGLE_CLIENT_ID = '723711001614-102i4ikgfl3s3okgih8qjurnbgn4ob13.apps.googleusercontent.com'; // Replace with your actual Client ID
 
@@ -17,6 +17,9 @@ sessionStorage.setItem('sessionId', sessionId);
 let tempGoogleToken: string | null = sessionStorage.getItem('google_token');
 let googleTokenClient: any = null;
 let isConfirmingDisconnect = false;
+let selectedFileId: string | null = sessionStorage.getItem('google_file_id');
+let selectedFileName: string | null = sessionStorage.getItem('google_file_name');
+let pickerApiLoaded = false;
 
 // System instruction for the chatbot
 const SYSTEM_INSTRUCTION = {
@@ -147,13 +150,13 @@ function initGoogleDriveAuth() {
         updateDriveUI(true);
     }
 
-    // We wait until the GSI script is loaded
+    // Load GSI
     const checkGsi = setInterval(() => {
         if (typeof (window as any).google !== 'undefined') {
             clearInterval(checkGsi);
             googleTokenClient = (window as any).google.accounts.oauth2.initTokenClient({
                 client_id: GOOGLE_CLIENT_ID,
-                scope: 'https://www.googleapis.com/auth/drive.readonly',
+                scope: 'https://www.googleapis.com/auth/drive.file',
                 callback: (response: any) => {
                     if (response.access_token) {
                         const expiryTime = Date.now() + (3540 * 1000); // 59 minutes from now
@@ -161,11 +164,18 @@ function initGoogleDriveAuth() {
                         sessionStorage.setItem('google_token', tempGoogleToken);
                         sessionStorage.setItem('token_expiry', expiryTime.toString());
                         updateDriveUI(true);
+                        // After getting token, open picker
+                        showPicker();
                     }
                 },
             });
         }
     }, 100);
+
+    // Load GAPI for Picker
+    if (typeof (window as any).gapi !== 'undefined') {
+        (window as any).gapi.load('picker', { 'callback': () => { pickerApiLoaded = true; } });
+    }
 }
 
 function checkTokenValidity() {
@@ -190,7 +200,11 @@ function updateDriveUI(isConnected: boolean) {
     connectDriveBtn.classList.remove('disconnect-confirm');
     if (isConnected) {
         connectDriveBtn.classList.add('connected');
-        connectDriveBtn.querySelector('span')!.textContent = 'Drive Connected';
+        if (selectedFileName) {
+            connectDriveBtn.querySelector('span')!.textContent = `File: ${selectedFileName}`;
+        } else {
+            connectDriveBtn.querySelector('span')!.textContent = 'Select File';
+        }
     } else {
         connectDriveBtn.classList.remove('connected');
         connectDriveBtn.querySelector('span')!.textContent = 'Connect Drive';
@@ -199,6 +213,11 @@ function updateDriveUI(isConnected: boolean) {
 
 function handleConnectDrive() {
     if (tempGoogleToken) {
+        if (!selectedFileId) {
+            showPicker();
+            return;
+        }
+        
         if (!isConfirmingDisconnect) {
             isConfirmingDisconnect = true;
             connectDriveBtn.classList.add('disconnect-confirm');
@@ -214,11 +233,44 @@ function handleConnectDrive() {
             // Perform disconnect
             sessionStorage.removeItem('google_token');
             sessionStorage.removeItem('token_expiry');
+            sessionStorage.removeItem('google_file_id');
+            sessionStorage.removeItem('google_file_name');
             tempGoogleToken = null;
+            selectedFileId = null;
+            selectedFileName = null;
             updateDriveUI(false);
         }
     } else if (googleTokenClient) {
         googleTokenClient.requestAccessToken();
+    }
+}
+
+function showPicker() {
+    if (!pickerApiLoaded || !tempGoogleToken) return;
+
+    const view = new (window as any).google.picker.DocsView((window as any).google.picker.ViewId.DOCS);
+    view.setMimeTypes('application/pdf,application/vnd.google-apps.document,text/plain');
+
+    const picker = new (window as any).google.picker.PickerBuilder()
+        .addView(view)
+        .setOAuthToken(tempGoogleToken)
+        .setDeveloperKey('') // Developer Key is optional for basic picker but recommended
+        .setCallback(pickerCallback)
+        .build();
+    picker.setVisible(true);
+}
+
+function pickerCallback(data: any) {
+    if (data.action === (window as any).google.picker.Action.PICKED) {
+        const file = data.docs[0];
+        selectedFileId = file.id;
+        selectedFileName = file.name;
+        sessionStorage.setItem('google_file_id', selectedFileId!);
+        sessionStorage.setItem('google_file_name', selectedFileName!);
+        updateDriveUI(true);
+        
+        // Optional: Notify user
+        appendMessage('model', `Great! I've connected to your file: **${selectedFileName}**. How can I help you with it?`);
     }
 }
 
@@ -297,6 +349,7 @@ async function sendMessage(message: string) {
         body: JSON.stringify({ 
             sessionId: sessionId,
             google_token: tempGoogleToken,
+            google_file_id: selectedFileId,
             history: chatHistory,
             body: {
                 text: message
