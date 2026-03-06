@@ -173,9 +173,15 @@ function initGoogleDriveAuth() {
     }, 100);
 
     // Load GAPI for Picker
-    if (typeof (window as any).gapi !== 'undefined') {
-        (window as any).gapi.load('picker', { 'callback': () => { pickerApiLoaded = true; } });
-    }
+    const checkGapi = setInterval(() => {
+        if (typeof (window as any).gapi !== 'undefined') {
+            clearInterval(checkGapi);
+            (window as any).gapi.load('picker', { callback: () => { 
+                console.log("Picker API loaded successfully");
+                pickerApiLoaded = true; 
+            } });
+        }
+    }, 100);
 }
 
 function checkTokenValidity() {
@@ -246,18 +252,39 @@ function handleConnectDrive() {
 }
 
 function showPicker() {
-    if (!pickerApiLoaded || !tempGoogleToken) return;
+    if (!tempGoogleToken) return;
 
-    const view = new (window as any).google.picker.DocsView((window as any).google.picker.ViewId.DOCS);
-    view.setMimeTypes('application/pdf,application/vnd.google-apps.document,text/plain');
+    let attempts = 0;
+    const tryShowPicker = () => {
+        attempts++;
+        if (!pickerApiLoaded || !(window as any).google || !(window as any).google.picker) {
+            if (attempts > 50) {
+                console.error("Google Picker API failed to load.");
+                alert("Failed to load Google Picker. Please refresh the page and try again.");
+                return;
+            }
+            setTimeout(tryShowPicker, 100);
+            return;
+        }
+        
+        try {
+            const view = new (window as any).google.picker.DocsView((window as any).google.picker.ViewId.DOCS);
+            view.setMimeTypes('application/pdf,application/vnd.google-apps.document,text/plain');
 
-    const picker = new (window as any).google.picker.PickerBuilder()
-        .addView(view)
-        .setOAuthToken(tempGoogleToken)
-        .setDeveloperKey('') // Developer Key is optional for basic picker but recommended
-        .setCallback(pickerCallback)
-        .build();
-    picker.setVisible(true);
+            const picker = new (window as any).google.picker.PickerBuilder()
+                .addView(view)
+                .setOAuthToken(tempGoogleToken)
+                .setCallback(pickerCallback)
+                .setOrigin(window.location.protocol + '//' + window.location.host)
+                .build();
+            picker.setVisible(true);
+        } catch (error) {
+            console.error("Error showing picker:", error);
+            alert("An error occurred while opening the file picker.");
+        }
+    };
+    
+    tryShowPicker();
 }
 
 function pickerCallback(data: any) {
